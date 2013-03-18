@@ -1,11 +1,9 @@
-import datetime
-from haystack.indexes import *
-from queued_search.indexes import QueuedSearchIndex
+from haystack.indexes import SearchIndex, CharField, BooleanField
 from haystack import site
 from features.models import Feature
 
 
-class FeatureIndex(QueuedSearchIndex):
+class FeatureIndex(SearchIndex):
     text = CharField(document=True, use_template=True)
     published = BooleanField(model_attr='published', default=False)
 
