@@ -1,23 +1,25 @@
 import mimetypes
-from django.http import HttpResponse, HttpResponseRedirect
+# from gheat import dots, renderer, StorageBackend, color_schemes
+
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.views.decorators.cache import cache_page
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
-from django.db.models import Sum, Count
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.contrib.comments.models import Comment
 from django.core.servers.basehttp import FileWrapper
 from django.conf import settings
-from feeds.models import *
-from tagging.models import TaggedItem
+
+from feeds.models import FeedItems
+from tagging.models import TaggedItem, Tag
 from misc.helpers import country_template, CachedCountQuerySetWrapper, QuerySetCache
 from web.countryinfo.transparency import transparency_score
 from web.countryinfo.load_info import load_info
 from data import countryCodes
-import context_processors
+
 import models
-from listmaker.models import ListItem, List
 
 from frontend.models import Profile
 from frontend.forms import DataAgreementForm
@@ -27,36 +29,31 @@ LATEST_YEAR = settings.LATEST_YEAR
 
 
 def home(request):
+    # ip_country = request.session.get('ip_country', 'GB')
+    # top_for_ip = models.Recipient.objects.top_recipients(country=ip_country)
 
-  # ip_country = request.session.get('ip_country', 'GB')
-  # top_for_ip = models.Recipient.objects.top_recipients(country=ip_country)
+    top_eu = models.RecipientYear.objects.filter(year=LATEST_YEAR)[:10]
+    top_eu = QuerySetCache(top_eu, key="home.top_eu", cache_type="filesystem")
 
-  top_eu = models.RecipientYear.objects.filter(year=LATEST_YEAR)[:10]
-  top_eu = QuerySetCache(top_eu, key="home.top_eu", cache_type="filesystem")
-  
-  latest_annotations = Comment.objects.all().order_by('-submit_date')[:5]
-  
-  return render_to_response(
-    'home.html', 
-    {
-    'top_eu' : top_eu,
-    'is_home' : True,
-    'LATEST_YEAR' : LATEST_YEAR,
-    # 'top_for_ip' : top_for_ip,
-    'latest_annotations' : latest_annotations,
-    },
-    context_instance=RequestContext(request)
-  )
+    latest_annotations = Comment.objects.all().order_by('-submit_date')[:5]
+
+    return render_to_response('home.html', {
+        'top_eu': top_eu,
+        'is_home': True,
+        'LATEST_YEAR': LATEST_YEAR,
+        # 'top_for_ip': top_for_ip,
+        'latest_annotations': latest_annotations,
+    }, context_instance=RequestContext(request))
 
 
 def countries(request):
     countries = []
     for country in countryCodes.country_codes():
-        countries.append(countryCodes.country_codes(country)) 
-        
-    return render_to_response('countries.html', 
-    {'countries' : countries},
-    context_instance=RequestContext(request))
+        countries.append(countryCodes.country_codes(country))
+
+    return render_to_response('countries.html',
+        {'countries': countries},
+        context_instance=RequestContext(request))
 
 
 def country(request, country, year=DEFAULT_YEAR):
@@ -73,8 +70,8 @@ def country(request, country, year=DEFAULT_YEAR):
 
     years_max_min = models.CountryYear.objects.year_max_min(country)
     years = models.CountryYear.objects.filter(country=country)
-    
-    if year !=0:
+
+    if year != 0:
         top_recipients = models.RecipientYear.objects.filter(year=year)
         if country != "EU":
             top_recipients = top_recipients.filter(country=country)
@@ -83,11 +80,11 @@ def country(request, country, year=DEFAULT_YEAR):
         if country != "EU":
             top_recipients = top_recipients.filter(countrypayment=country)
     top_recipients = top_recipients[:5]
-    
+
     # Cache top_recipients
     top_recipients = QuerySetCache(
-                        top_recipients, 
-                        key="country.%s.%s.top_recipients" % (country, year), 
+                        top_recipients,
+                        key="country.%s.%s.top_recipients" % (country, year),
                         cache_type="filesystem")
 
     if country and country != "EU":
@@ -101,28 +98,26 @@ def country(request, country, year=DEFAULT_YEAR):
                         key="country.%s.%s.top_schemes" % (country, year),
                         cache_type="filesystem")
 
-
     top_locations = models.Location.get_root_nodes().filter(year=year)
     if country and country != "EU":
         top_locations = top_locations.filter(country=country)
     top_locations = top_locations.order_by('-total')[:5]
-    
+
     # Cache top_locations
     top_locations = QuerySetCache(
                         top_locations,
                         key="country.%s.%s.top_locations" % (country, year),
                         cache_type="filesystem")
 
-
-
     #get transparency score
     transparency = None
     if country != "EU":
-      transparency = transparency_score(country)
-    
+        transparency = transparency_score(country)
+
     #get the most recent news story
-    latest_news_item = False    
-    news_items = TaggedItem.objects.get_by_model(FeedItems, Tag.objects.filter(name=country))
+    latest_news_item = False
+    news_items = TaggedItem.objects.get_by_model(FeedItems,
+        Tag.objects.filter(name=country))
     news_items = news_items.order_by("-date")
     if news_items:
         latest_news_item = news_items[0]
@@ -131,90 +126,93 @@ def country(request, country, year=DEFAULT_YEAR):
     stats_info = load_info(country)
 
     return render_to_response(
-    country_template('country.html', country),
-    {
-        'top_recipients' : top_recipients,
-        'top_schemes' : top_schemes,
-        'top_locations' : top_locations,
-        'transparency' : transparency,
-        'latest_news_item': latest_news_item,
-        'stats_year': settings.STATS_YEAR,
-        'stats_info': stats_info,
-        'years' : years,
-        'selected_year' : int(year),
-        'years_max_min' : years_max_min,
-    },
-    context_instance=RequestContext(request)
+        country_template('country.html', country),
+        {
+            'top_recipients': top_recipients,
+            'top_schemes': top_schemes,
+            'top_locations': top_locations,
+            'transparency': transparency,
+            'latest_news_item': latest_news_item,
+            'stats_year': settings.STATS_YEAR,
+            'stats_info': stats_info,
+            'years': years,
+            'selected_year': int(year),
+            'years_max_min': years_max_min,
+        },
+        context_instance=RequestContext(request)
     )
 
 
 def recipient(request, country, recipient_id, name):
-  """
-  View for recipient page.
-  
-  - `country` ISO country, as defined in countryCodes
-  - `recipient_id` is actually a globalrecipientidx in the date
-  
-  """
+    """
+    View for recipient page.
 
-  country = country.upper()
+    - `country` ISO country, as defined in countryCodes
+    - `recipient_id` is actually a globalrecipientidx in the date
 
-  recipient = get_object_or_404(models.Recipient, globalrecipientidx=recipient_id)
-  
-  payments = models.Payment.objects.select_related().filter(recipient=recipient_id).order_by('-year', '-amounteuro')
-  expanded = request.GET.get('expand', False)
-  if not expanded:
-      # Hack to stop *all* payments getting displayed, when there are sometimes
-      # many 'trasactions' per year in the same scheme.
-      all_payments = payments.values('year','scheme',).annotate(amounteuro=Sum('amounteuro')).order_by('-year', '-amounteuro').select_related()
-      payments = []
-      for payment in all_payments:
-          p = models.Payment()
-          p.year = payment['year']
-          p.amounteuro = payment['amounteuro']
-          s = models.Scheme.objects.get(pk=payment['scheme'])
-          p.scheme = s
-          payments.append(p)
+    """
 
-  recipient_total = recipient.total
-  payment_years = list(set(payment.year for payment in payments))
+    country = country.upper()
 
-  
-  payment_schemes = []
-  for payment in payments:
-      for scheme in payment.scheme.schemetype_set.all():
-          payment_schemes.append(scheme.scheme_type)
-  
-  try:
-      georecipient = models.GeoRecipient.objects.get(pk=recipient.pk)
-      closest = models.GeoRecipient.objects.filter(location__dwithin=(georecipient.location, 20)).distance(georecipient.location).order_by('distance')[:5]
-  except:
-      closest = None
-  
-  # lists this recipient is in:
-  recipient_lists = []
-  for list_obj in ListItem.objects.filter(object_id=recipient_id):
-      recipient_lists.append(list_obj.list_id)
+    recipient = get_object_or_404(models.Recipient, globalrecipientidx=recipient_id)
 
-  years_max_min = models.CountryYear.objects.year_max_min(country)
-  return render_to_response(
-    'recipient.html', 
-    {
-        'recipient' : recipient,
-        'payments' : payments,
-        'recipient_total' : recipient_total,
-        'recipient_lists' : recipient_lists,
-        'payment_years' : payment_years,
-        'has_direct' : 1 in payment_schemes,
-        'has_indirect' : 2 in payment_schemes,
-        'has_rural' : 3 in payment_schemes,
-        'first_year' : 0,
-        'years_max_min' : years_max_min,
-        'expanded' : expanded,
-        'closest' : closest,
-    },
-    context_instance=RequestContext(request)
-  )  
+    payments = models.Payment.objects.select_related().filter(recipient=recipient_id).order_by('-year', '-amounteuro')
+    expanded = request.GET.get('expand', False)
+    if not expanded:
+        # Hack to stop *all* payments getting displayed, when there are sometimes
+        # many 'trasactions' per year in the same scheme.
+        all_payments = payments.values('year', 'scheme')
+        all_payments = all_payments.annotate(amounteuro=Sum('amounteuro'))
+        all_payments = all_payments.order_by('-year', '-amounteuro').select_related()
+        payments = []
+        for payment in all_payments:
+            p = models.Payment()
+            p.year = payment['year']
+            p.amounteuro = payment['amounteuro']
+            s = models.Scheme.objects.get(pk=payment['scheme'])
+            p.scheme = s
+            payments.append(p)
+
+    recipient_total = recipient.total
+    payment_years = list(set(payment.year for payment in payments))
+
+    payment_schemes = []
+    for payment in payments:
+        for scheme in payment.scheme.schemetype_set.all():
+            payment_schemes.append(scheme.scheme_type)
+
+    try:
+        georecipient = models.GeoRecipient.objects.get(pk=recipient.pk)
+        closest = models.GeoRecipient.objects.filter(
+            location__dwithin=(georecipient.location, 20)
+        ).distance(georecipient.location).order_by('distance')[:5]
+    except:
+        closest = None
+
+    # lists this recipient is in:
+    recipient_lists = []
+    for list_obj in ListItem.objects.filter(object_id=recipient_id):
+        recipient_lists.append(list_obj.list_id)
+
+    years_max_min = models.CountryYear.objects.year_max_min(country)
+    return render_to_response('recipient.html',
+        {
+            'recipient': recipient,
+            'payments': payments,
+            'recipient_total': recipient_total,
+            'recipient_lists': recipient_lists,
+            'payment_years': payment_years,
+            'has_direct': 1 in payment_schemes,
+            'has_indirect': 2 in payment_schemes,
+            'has_rural': 3 in payment_schemes,
+            'first_year': 0,
+            'years_max_min': years_max_min,
+            'expanded': expanded,
+            'closest': closest,
+        },
+        context_instance=RequestContext(request)
+    )
+
 
 def all_schemes(request, country='EU'):
     """
@@ -222,7 +220,7 @@ def all_schemes(request, country='EU'):
     """
 
     schemes = models.Scheme.objects.filter(total__isnull=False).order_by('-total')
-    
+
     if country != 'EU':
         schemes = schemes.filter(countrypayment=country)
 
@@ -230,16 +228,15 @@ def all_schemes(request, country='EU'):
                         schemes,
                         key="all_schemes.%s.schemes" % (country,),
                         cache_type="filesystem")
-    
-    
+
     return render_to_response(
         country_template('all_schemes.html', country),
         {
-            'schemes' : schemes,
+            'schemes': schemes,
         },
         context_instance=RequestContext(request)
-    )  
-    
+    )
+
 
 def scheme(request, country, globalschemeid, name, year=0):
     """
@@ -247,7 +244,7 @@ def scheme(request, country, globalschemeid, name, year=0):
 
     - `country` ISO country, as defined by countryCodes
     - ``globalschemeid` globalschemeid from the data_schemes table in the database
-    """ 
+    """
 
     selected_year = int(year)
 
@@ -259,18 +256,18 @@ def scheme(request, country, globalschemeid, name, year=0):
     top_recipients = models.RecipientSchemeYear.objects.filter(scheme=scheme, year=selected_year)
 
     top_recipients = CachedCountQuerySetWrapper(top_recipients, key="data.scheme.%s.%s.%s.top_recipients" % (country, globalschemeid, year))
-    
+
     return render_to_response(
-        country_template('scheme.html', country), 
+        country_template('scheme.html', country),
         {
-            'scheme' : scheme,
-            'scheme_years' : scheme_years,
-            'selected_year' : selected_year,
-            'top_recipients' : top_recipients,
+            'scheme': scheme,
+            'scheme_years': scheme_years,
+            'selected_year': selected_year,
+            'top_recipients': top_recipients,
         },
         context_instance=RequestContext(request)
-    )  
-  
+    )
+
 
 def browse(request, country):
     """
@@ -278,7 +275,7 @@ def browse(request, country):
     """
 
     from misc.fast_pager import Paginator
-    
+
     recipients = models.Recipient.objects.order_by('-total')
 
     if country != "EU":
@@ -292,18 +289,19 @@ def browse(request, country):
     return render_to_response(
         country_template('browse.html', country),
         {
-            'recipients' : recipients,
+            'recipients': recipients,
         },
         context_instance=RequestContext(request)
-    )  
+    )
+
 
 @cache_page(60 * 60 * 4, key_prefix="farm")
 def all_locations(request, country, year=0):
     locations = models.Location.objects.all()
     kwargs = {
-        'geo_type' : 'geo1',
-        'year' : year,
-        }
+        'geo_type': 'geo1',
+        'year': year,
+    }
     if country != "EU":
         kwargs['country'] = country
     locations = locations.filter(**kwargs)
@@ -311,44 +309,45 @@ def all_locations(request, country, year=0):
     return render_to_response(
         country_template('all_locations.html', country),
         {
-            'locations' : locations,
+            'locations': locations,
         },
         context_instance=RequestContext(request)
-    )  
+    )
+
 
 # @cache_page(60 * 60 * 4)
 def location(request, country, slug=None, year=0):
     """
     Single location object. This is a node in the tree, and could have
     children.
-    
+
     If children are found, we call them 'sub locations' and display a list of
     them.
     """
-    
+
     location = get_object_or_404(models.Location, country=country, slug=slug, year=year)
 
     if int(year) != 0:
         location_recipients = models.RecipientYear.objects.recipents_for_location(location, year=year, country=country)
     else:
         location_recipients = models.Recipient.objects.recipents_for_location(location, country=country).order_by('-total')
-    
+
     location_recipients = CachedCountQuerySetWrapper(location_recipients, key="data.locaion.count.%s.%s.%s" % (country, year, slug))
-    
+
     sub_locations = location.get_children()
-    
+
     years_max_min = models.CountryYear.objects.year_max_min(country)
 
     return render_to_response(
-        country_template('location.html', country), 
+        country_template('location.html', country),
         {
-            'location' : location,
-            'location_recipients' : location_recipients,
-            'sub_locations' : sub_locations,
-            'years_max_min' : years_max_min,
+            'location': location,
+            'location_recipients': location_recipients,
+            'sub_locations': sub_locations,
+            'years_max_min': years_max_min,
         },
         context_instance=RequestContext(request)
-    )  
+    )
 
 
 @login_required
@@ -360,8 +359,7 @@ def download(request, data_file=None):
         profile = Profile(user=request.user)
         profile.save()
 
-
-    if profile.data_agreement == False:
+    if not profile.data_agreement:
         request.notifications.add("Please agree to the following licence before downloading the data")
         return HttpResponseRedirect(reverse('data_agreement_form'))
 
@@ -375,12 +373,9 @@ def download(request, data_file=None):
         return response
 
     files = models.DataDownload.objects.filter(public=True)
-    return render_to_response(
-      'downloads.html', 
-      {
-      'files' : files,
-      },
-      context_instance=RequestContext(request)
+    return render_to_response('downloads.html',
+        {'files': files},
+        context_instance=RequestContext(request)
     )
 
 
@@ -397,54 +392,43 @@ def data_agreement_form(request):
     if request.POST:
         form = DataAgreementForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save() 
+            form.save()
     else:
         form = DataAgreementForm(instance=profile)
 
-    return render_to_response(
-      'data_agreement_form.html', 
-      {
-      'form' : form,
-      }, 
-      context_instance=RequestContext(request)
+    return render_to_response('data_agreement_form.html',
+        {'form': form},
+        context_instance=RequestContext(request)
     )
+
 
 def heatmap(request):
-    return render_to_response(
-      'heatmap.html', 
-      {
-      }, 
-      context_instance=RequestContext(request)
+    return render_to_response('heatmap.html', {},
+        context_instance=RequestContext(request)
     )
-    
 
 
-from django.http import HttpResponse, HttpResponseBadRequest
-from gheat import dots, renderer, StorageBackend, color_schemes
-# from gheat_demo.tweetmap.models import TweetPoint
-
-def serve_tile(request,color_scheme,zoom,x,y):
+def serve_tile(request, color_scheme, zoom, x, y):
     # Check arguments
     try:
-        assert color_scheme in color_schemes, ( "bad color_scheme: "
-                                              + color_scheme
-                                               )
+        assert color_scheme in color_schemes, "bad color_scheme: " + color_scheme
         assert zoom.isdigit() and x.isdigit() and y.isdigit(), "not digits"
         zoom = int(zoom)
         x = int(x)
         y = int(y)
         assert 0 <= zoom <= 30, "bad zoom: %d" % zoom
-    except AssertionError, err:
+    except AssertionError:
         return HttpResponseBadRequest()
 
     # Get image and storage backends
-    tile = renderer.Tile(models.GeoRecipient.objects.all(), color_scheme, dots, zoom, x, y, point_field='location')
+    tile = renderer.Tile(models.GeoRecipient.objects.all(), color_scheme,
+        dots, zoom, x, y, point_field='location')
     storage_backend = StorageBackend()
 
     # Grab the raw image data
     if tile.is_empty():
         bytes = storage_backend.get_emptytile_bytes(tile)
-    else: # tile.is_stale() or ALWAYS_BUILD:
+    else:  # tile.is_stale() or ALWAYS_BUILD:
         bytes = storage_backend.get_tile_bytes(tile, 'farm')
 
     # Write the bytes out to the HttpResponse
