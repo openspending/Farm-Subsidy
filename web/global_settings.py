@@ -92,13 +92,9 @@ INSTALLED_APPS = [
     'features',
     'django.contrib.gis',
     'typogrify',
-    'queued_search',
     'piston',
     'indexer',
     'paging',
-    'sentry',
-    'sentry.client',
-    'gheat',
     'petition',
 ]
 
