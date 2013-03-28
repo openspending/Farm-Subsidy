@@ -23,7 +23,7 @@ def search(request, search_map=False):
     feature_search = None
 
     if q:
-        forms.SearchForm(initial={'q': q})
+        form = forms.SearchForm(initial={'q': q})
 
         auto_q = AutoQuery(q)
         sqs = SearchQuerySet().models(Recipient).filter(content=auto_q).load_all()
