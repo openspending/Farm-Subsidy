@@ -83,7 +83,6 @@ INSTALLED_APPS = [
     'tagging',
     'registration',
     'profiles',
-    'devserver',
     'treebeard',
     'haystack',
     'listmaker',
@@ -97,20 +96,19 @@ INSTALLED_APPS = [
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-  "django.core.context_processors.auth",
-  "django.core.context_processors.debug",
-  "django.core.context_processors.i18n",
-  "django.core.context_processors.media",
-  "django.core.context_processors.request",
-  'data.context_processors.country',
-  'data.context_processors.ip_country',
-  'listmaker.context_processors.list_items',
-  # 'misc.context_processors.latest_tweet',
-  'misc.context_processors.google_api_key',
-  'misc.context_processors.header_class',
-  'data.context_processors.breadcrumb',
-  'data.context_processors.data_totals_info',
-  'features.context_processors.featured_items',
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    'data.context_processors.country',
+    'data.context_processors.ip_country',
+    'listmaker.context_processors.list_items',
+    'misc.context_processors.google_api_key',
+    'misc.context_processors.header_class',
+    'data.context_processors.breadcrumb',
+    'data.context_processors.data_totals_info',
+    'features.context_processors.featured_items',
 )
 
 ACCOUNT_ACTIVATION_DAYS = 7
