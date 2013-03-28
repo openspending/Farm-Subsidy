@@ -14,6 +14,7 @@ from django.conf import settings
 
 from feeds.models import FeedItems
 from tagging.models import TaggedItem, Tag
+from listmaker.models import ListItem
 from misc.helpers import country_template, CachedCountQuerySetWrapper, QuerySetCache
 from web.countryinfo.transparency import transparency_score
 from web.countryinfo.load_info import load_info
@@ -360,7 +361,7 @@ def download(request, data_file=None):
         profile.save()
 
     if not profile.data_agreement:
-        request.notifications.add("Please agree to the following licence before downloading the data")
+        # request.notifications.add("Please agree to the following licence before downloading the data")
         return HttpResponseRedirect(reverse('data_agreement_form'))
 
     if data_file:

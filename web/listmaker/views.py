@@ -55,7 +55,7 @@ def deactivate(request):
                 list_id = None
             return HttpResponseRedirect(reverse('save_list', kwargs={'list_id' : list_id} ))
         lists.delete_list(request)
-        request.notifications.add("Your list has been deactivated")
+        # request.notifications.add("Your list has been deactivated")
         return HttpResponseRedirect(reverse('lists_home'))
     return render_to_response(
         'deactivate_warning.html',

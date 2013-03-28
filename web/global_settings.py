@@ -46,7 +46,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'pagination.middleware.PaginationMiddleware',
-    'django_notify.middleware.NotificationsMiddleware',
     'web.misc.middleware.Middleware',
     # 'django.middleware.transaction.TransactionMiddleware',
 ]
@@ -72,7 +71,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.syndication',
-    'django_notify',
     'web.api',
     'web.comments',
     'countryinfo',
