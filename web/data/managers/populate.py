@@ -10,18 +10,19 @@ the latest data), and then join everything with that row, rather than grouping
 by the ID.
 
 """
-from django.db import connection, backend, models
+from django.db import connection, models
 from django.template.defaultfilters import slugify
 
+
 class Normalize(models.Manager):
-    
+
     def hacks(self, data_type):
         """
         A load of hacks for each type.
-        
+
         Mainly relating to MySQL being shit and not understanding NULL properly
         """
-    
+
         if data_type == "recipients":
             return """
             (recipientid, recipientidx, globalrecipientid, globalrecipientidx, name, address1, address2, zipcode, town, countryrecipient, countrypayment, geo1, geo2, geo3, geo4, geo1nationallanguage, geo2nationallanguage, geo3nationallanguage, geo4nationallanguage, @lat, @lng)
@@ -47,28 +48,28 @@ class Normalize(models.Manager):
             """
         else:
             return ""
-    
+
     def populate_raw(self, data_type, from_table, country):
         """
         Does the inital loading.
-        
+
         Assumes files are *always* called, schemes.csv, payments.csv or
-        recipients.csv and *always live in ../data/csv/[country]/        
+        recipients.csv and *always live in ../data/csv/[country]/
         """
         if data_type == "locations":
             return
-        
+
         print data_type
-        file_name = "%s.csv" % data_type
-        file_path = "../data/csv"
-        full_path = "%s/%s/%s" % (file_path, country, file_name,)
-        
+        # file_name = "%s.csv" % data_type
+        # file_path = "../data/csv"
+        # full_path = "%s/%s/%s" % (file_path, country, file_name)
+
         table_hacks = self.hacks(data_type)
         print table_hacks
-        
+
         sql = """
             ALTER TABLE %(from_table)s DISABLE KEYS;
-            
+
             LOAD DATA LOCAL INFILE '%(full_path)s'
             REPLACE INTO TABLE %(from_table)s
             FIELDS TERMINATED BY ';'
@@ -76,7 +77,7 @@ class Normalize(models.Manager):
             LINES TERMINATED BY '\r\n'
             %(table_hacks)s
             ;
-            
+
             ALTER TABLE %(from_table)s ENABLE KEYS;
         """ % locals()
         print repr(sql)
@@ -85,29 +86,27 @@ class Normalize(models.Manager):
         cursor.close()
         print "done"
 
-
-
     def populate(self, data_type, from_table, dest_table, country):
         if data_type == "recipients":
             sql = """
             BEGIN;
             DELETE FROM %(dest_table)s WHERE countrypayment='%(country)s';
             COMMIT;
-                        
+
             BEGIN;
             INSERT INTO %(dest_table)s
-            SELECT 
-                r.recipientid, 
-                r.recipientidx, 
-                r.globalrecipientid, 
-                r.globalrecipientidx, 
-                r.name, r.address1, r.address2, r.zipcode, r.town, 
-                r.countryrecipient, r.countrypayment, 
-                r.geo1, r.geo2, r.geo3, r.geo4, 
-                r.geo1nationallanguage, r.geo2nationallanguage, 
-                r.geo3nationallanguage, r.geo4nationallanguage, 
-                r.lat, 
-                r.lng, 
+            SELECT
+                r.recipientid,
+                r.recipientidx,
+                r.globalrecipientid,
+                r.globalrecipientidx,
+                r.name, r.address1, r.address2, r.zipcode, r.town,
+                r.countryrecipient, r.countrypayment,
+                r.geo1, r.geo2, r.geo3, r.geo4,
+                r.geo1nationallanguage, r.geo2nationallanguage,
+                r.geo3nationallanguage, r.geo4nationallanguage,
+                r.lat,
+                r.lng,
                 SUM(p.amounteuro) as total
             FROM %(from_table)s r
             JOIN data_payments_raw p
@@ -115,42 +114,41 @@ class Normalize(models.Manager):
             WHERE r.countrypayment='%(country)s'
             GROUP BY r.globalrecipientidx;
             COMMIT;
-            
+
             """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
             cursor = connection.cursor()
             cursor.execute(sql)
-                
+
             sql = """
             BEGIN;
             DELETE FROM data_year_total WHERE country='%(country)s';
             COMMIT;
             """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
-            cursor = connection.cursor()
-            cursor.execute(sql)
-                
-            sql = """
-            INSERT INTO data_year_total (recipient_id, year, total, country)
-            SELECT globalrecipientidx, year, SUM(amounteuro), countrypayment 
-            FROM data_payments_raw 
-            WHERE countrypayment='%(country)s'
-            GROUP BY globalrecipientidx, year;
-            """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
-            
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
             cursor = connection.cursor()
             cursor.execute(sql)
 
+            sql = """
+            INSERT INTO data_year_total (recipient_id, year, total, country)
+            SELECT globalrecipientidx, year, SUM(amounteuro), countrypayment
+            FROM data_payments_raw
+            WHERE countrypayment='%(country)s'
+            GROUP BY globalrecipientidx, year;
+            """ % {
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
+
+            cursor = connection.cursor()
+            cursor.execute(sql)
 
         elif data_type == "payments":
             print "payments"
@@ -161,11 +159,11 @@ class Normalize(models.Manager):
             FROM data_payments_raw
             WHERE countrypayment='%(country)s';
             """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
-            
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
+
             cursor = connection.cursor()
             cursor.execute(sql)
 
@@ -178,11 +176,11 @@ class Normalize(models.Manager):
             FROM %(from_table)s
             WHERE countrypayment='%(country)s';
             """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
-            
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
+
             cursor = connection.cursor()
             cursor.execute(sql)
 
@@ -194,47 +192,47 @@ class Normalize(models.Manager):
             GROUP BY globalschemeid, year, countrypayment
             ;
             """ % {
-                'from_table' : from_table,
-                'dest_table' : dest_table,
-                'country' : country,
-                }
-            
+                'from_table': from_table,
+                'dest_table': dest_table,
+                'country': country,
+            }
+
             cursor = connection.cursor()
             cursor.execute(sql)
-        
+
         elif data_type == "locations":
             """
             This gets complex.
-            
+
             TODO: document fully
             """
-            
+
             from data.models import Location
-                        
+
             def location_query(geo_type, country, cols={}):
                 """
                 Returns a list of rows, grouped by 'geo_type', where the parent
                 is in the cols dict.
                 """
 
-                col_sql = "AND".join(["%s='%s'" % (k,v) for k,v in cols.items()])
+                col_sql = "AND".join(["%s='%s'" % (k, v) for k, v in cols.items()])
                 if col_sql:
                     col_sql = "AND %s" % col_sql
-                
+
                 sql = """
-                SELECT %(geo_type)s as geoname, '%(country)s' as country, 
-                       COUNT(r.globalrecipientidx) as recipients, 
+                SELECT %(geo_type)s as geoname, '%(country)s' as country,
+                       COUNT(r.globalrecipientidx) as recipients,
                        SUM(r.total) as total, SUM(r.total)/COUNT(*) as average
                 FROM data_recipients r
                 WHERE countrypayment='%(country)s'
                 %(col_sql)s
                 GROUP BY geoname
-            
+
                 """ % {
-                        'country' : country,
-                        'geo_type' : geo_type,
-                        'col_sql' : col_sql,
-                    }
+                        'country': country,
+                        'geo_type': geo_type,
+                        'col_sql': col_sql,
+                }
                 print sql
                 cursor = connection.cursor()
                 cursor.execute(sql)
@@ -254,29 +252,25 @@ class Normalize(models.Manager):
                     "See if this already exists"
                     new_location = parent.objects.get(name=l['name'],
                                              country=country)
-                except Exception, e:
+                except Exception:
                     try:
-                        ""
                         new_location = parent.add_child(**l)
-                    except Exception, e:
+                    except Exception:
                         new_location = parent.add_root(**l)
 
                 return new_location
 
+            # geo_types = ['geo1', 'geo2', 'geo3', 'geo4']
+            geo_cols = {}
 
-            geo_types = ['geo1', 'geo2', 'geo3', 'geo4']
-            geo_cols = {}            
-            
             # geo1
             geo1_results = location_query('geo1', country)
             for geo1_result in geo1_results:
-                
-                L1 = save_location(geo1_result)
-                
-                geo2_results = location_query('geo2', country, geo_cols)
-                
-                for geo2_result in geo2_results:
-                    print "\t\t"+geo2_result['name']
-                    save_location(geo2_result, parent=L1, geo_type='geo2')
-            
 
+                L1 = save_location(geo1_result)
+
+                geo2_results = location_query('geo2', country, geo_cols)
+
+                for geo2_result in geo2_results:
+                    print "\t\t" + geo2_result['name']
+                    save_location(geo2_result, parent=L1, geo_type='geo2')

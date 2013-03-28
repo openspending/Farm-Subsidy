@@ -7,22 +7,23 @@ from django.core.cache import cache
 
 from django.utils.encoding import force_unicode
 
+
 def make_key(qs, key=None):
     if key:
         key = force_unicode(key)
         return "%s.%s" % (settings.CACHE_MIDDLEWARE_KEY_PREFIX, key)
     else:
-        return qs.__hash__()
+        return str(qs.__hash__())
 
 
 def country_template(path, country):
     """
     Wrapper function for select_template.
-    
-    Given a path, split on '/', prefix the last part (the file name) with 
-    __country__, pass it to select_template and return a string for use with 
+
+    Given a path, split on '/', prefix the last part (the file name) with
+    __country__, pass it to select_template and return a string for use with
     render_to_response.
-    
+
     For Example:
         country_template('locations/all_locations.html', 'GB')
     Will look for:
@@ -31,7 +32,7 @@ def country_template(path, country):
         locations/all_locations.html
 
     """
-    
+
     # First parse the path
     path = path.split('/')
     filename = path[-1]
@@ -50,7 +51,7 @@ class CachedCountQuerySetWrapper(object):
         Hack to pretend this is actually a queryset object
         """
         return getattr(self.queryset, name)
-    
+
     def __getitem__(self, k):
         if not isinstance(k, slice):
             return self.queryset[k]
@@ -69,18 +70,17 @@ class CachedCountQuerySetWrapper(object):
         return self.count()
 
 
-
 def QuerySetCache(qs, key=None, cache_type='deafult'):
     """
     Caches the *whole* queryset as it is given to the function.
-    
+
     For this to work, make sure it's called as late as it can be.
-    
-    Calling this on paged queries will work, but is silly, as the cached 
+
+    Calling this on paged queries will work, but is silly, as the cached
     queryset will normally be slower than just not caching it.
-    
+
     Use CachedCountQuerySetWrapper for speeding up paged results.
-    
+
     You have been warned.
     """
 
@@ -90,8 +90,7 @@ def QuerySetCache(qs, key=None, cache_type='deafult'):
         f = open(file_path, 'w')
         f.write(cPickle.dumps(qs))
         return qs
-        
-    
+
     # Use the django built in cache
     if cache_type == 'deafult':
         cached_qs = cache.get(key)
@@ -101,7 +100,7 @@ def QuerySetCache(qs, key=None, cache_type='deafult'):
             cached_qs = qs
             cache.set(key, cPickle.dumps(cached_qs))
         return cached_qs
-    
+
     # Use the file system, for more permanant caching
     if cache_type == 'filesystem':
         import os

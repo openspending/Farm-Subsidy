@@ -7,14 +7,12 @@ import sys
 
 from optparse import make_option
 
-import django
 from django.template.defaultfilters import slugify
-from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, backend, models, transaction
-import treebeard
+from django.core.management.base import BaseCommand
+from django.db import connection, transaction
 
 from data import countryCodes
-from data.models import Recipient, Location
+from data.models import Location
 
 
 class Command(BaseCommand):
@@ -23,14 +21,14 @@ class Command(BaseCommand):
         help='ISO country name'),
     )
     help = 'Normalizeation scripts for the farm data'
-    
+
     def make_slug(self, parent, name):
         """Given a Location instance (parent) and a name, make a new slug value"""
         path_list = [o.name for o in parent.get_ancestors()]
         path_list.append(name)
         slug = "/".join([slugify(n) for n in path_list])
         return slug
-    
+
     def dict_fetchall(self, cursor):
         if not cursor.description:
             return {}
@@ -50,21 +48,21 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, Dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
 
         geo1_sql_all_years = """
         SELECT TRIM(r.geo1) dgeo1, 0 as Dyear, r.countrypayment as country, SUM(p.total) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
         FROM data_recipient r
         JOIN (
             SELECT globalrecipientidx, SUM(amounteuro) as total
-            FROM data_payment 
+            FROM data_payment
             WHERE countrypayment IN (%(country_in_sql)s)
             GROUP BY globalrecipientidx
             ) as p
         ON r.globalrecipientidx=p.globalrecipientidx
         WHERE r.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, Dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
         cursor = connection.cursor()
 
         cursor.execute(geo1_sql)
@@ -78,18 +76,18 @@ class Command(BaseCommand):
         rows += all_years
         # import sys
         # sys.exit()
-        
+
         for row in rows:
-            if not row['total']: 
+            if not row['total']:
                 row['total'] = 0
-            
-            Location().add_root(geo_type='geo1', 
-                            name=row['dgeo1'].strip(), 
+
+            Location().add_root(geo_type='geo1',
+                            name=row['dgeo1'].strip(),
                             country=row['country'],
                             slug=self.make_slug(Location(), row['dgeo1']),
                             total=row['total'],
                             recipients=row['count'],
-                            average=row['total']/row['count'],
+                            average=row['total'] / float(row['count']),
                             lat=row['lat'],
                             lon=row['lng'],
                             year=row['dyear'],
@@ -97,9 +95,9 @@ class Command(BaseCommand):
 
     def geo2(self):
         """
-        
+
         """
-        
+
         geo2_sql = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, p.year as dyear, r.countrypayment as country, SUM(p.amounteuro) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
         FROM data_recipient r
@@ -109,14 +107,14 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
 
         geo2_sql_all_years = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, 0 as dyear, r.countrypayment as country, SUM(p.total) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
         FROM data_recipient r
         JOIN (
             SELECT globalrecipientidx, SUM(amounteuro) as total
-            FROM data_payment 
+            FROM data_payment
             WHERE countrypayment IN (%(country_in_sql)s)
             GROUP BY globalrecipientidx
             ) as p
@@ -124,7 +122,7 @@ class Command(BaseCommand):
         WHERE geo2 IS NOT NULL
         AND r.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
         cursor = connection.cursor()
 
         cursor.execute(geo2_sql)
@@ -137,34 +135,33 @@ class Command(BaseCommand):
         for row in rows:
             parent_slug = self.make_slug(Location(), row['dgeo1'])
             parent = Location.objects.get(
-                name=row['dgeo1'].strip(), 
-                slug=parent_slug, 
-                year=row['dyear'], 
+                name=row['dgeo1'].strip(),
+                slug=parent_slug,
+                year=row['dyear'],
                 country=row['country'],
                 geo_type='geo1')
-            
-            if not row['total']: 
+
+            if not row['total']:
                 row['total'] = 0
-            
+
             child = parent.add_child(geo_type='geo2',
-                            name=row['dgeo2'], 
+                            name=row['dgeo2'],
                             country=row['country'],
                             total=row['total'],
                             recipients=row['count'],
-                            average=row['total']/row['count'],
+                            average=row['total'] / float(row['count']),
                             lat=row['lat'],
                             lon=row['lng'],
                             year=row['dyear']
-                            )
-            child.slug=self.make_slug(child, row['dgeo2'])
+            )
+            child.slug = self.make_slug(child, row['dgeo2'])
             child.save()
-
 
     def geo3(self):
         """
-        
+
         """
-        
+
         geo3_sql = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, TRIM(r.geo3) dgeo3, p.year as dyear, r.countrypayment as country, SUM(p.amounteuro) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
         FROM data_recipient r
@@ -175,7 +172,7 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dgeo3, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
 
         geo3_sql_all_years = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, TRIM(r.geo3) dgeo3, 0 as dyear, r.countrypayment as country, SUM(p.amounteuro) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
@@ -187,7 +184,7 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dgeo3, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
         cursor = connection.cursor()
 
         cursor.execute(geo3_sql)
@@ -200,8 +197,8 @@ class Command(BaseCommand):
         for row in rows:
             grandparent_slug = self.make_slug(Location(), row['dgeo1'])
             grandparent = Location.objects.get(
-                name=row['dgeo1'], 
-                year=row['dyear'], 
+                name=row['dgeo1'],
+                year=row['dyear'],
                 slug=grandparent_slug,
                 country=row['country'],
                 geo_type='geo1')
@@ -210,34 +207,33 @@ class Command(BaseCommand):
             parent_slug = "/".join([grandparent_slug, parent_slug])
 
             parent = Location.objects.get(
-                name=row['dgeo2'], 
-                year=row['dyear'], 
-                slug = parent_slug,
+                name=row['dgeo2'],
+                year=row['dyear'],
+                slug=parent_slug,
                 country=row['country'],
                 geo_type='geo2')
 
-            if not row['total']: 
+            if not row['total']:
                 row['total'] = 0
 
             child = parent.add_child(geo_type='geo3',
-                            name=row['dgeo3'], 
+                            name=row['dgeo3'],
                             country=row['country'],
                             total=row['total'],
                             recipients=row['count'],
-                            average=row['total']/row['count'],
+                            average=row['total'] / float(row['count']),
                             lat=row['lat'],
                             lon=row['lng'],
                             year=row['dyear']
-                            )
-            child.slug=self.make_slug(child, row['dgeo3'])
+            )
+            child.slug = self.make_slug(child, row['dgeo3'])
             child.save()
-
 
     def geo4(self):
         """
-        
+
         """
-        
+
         geo4_sql = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, TRIM(r.geo3) dgeo3, TRIM(r.geo4) dgeo4, p.year as dyear, r.countrypayment as country, SUM(p.amounteuro) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
         FROM data_recipient r
@@ -249,7 +245,7 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dgeo3, dgeo4, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
 
         geo4_sql_all_years = """
         SELECT TRIM(r.geo1) dgeo1, TRIM(r.geo2) dgeo2, TRIM(r.geo3) dgeo3, TRIM(r.geo4) dgeo4, 0 as dyear, r.countrypayment as country, SUM(p.amounteuro) as total, COUNT(r.globalrecipientidx) as count, AVG(r.lat) as lat, AVG(r.lng) as lng
@@ -262,7 +258,7 @@ class Command(BaseCommand):
         AND r.countrypayment IN (%(country_in_sql)s)
         AND p.countrypayment IN (%(country_in_sql)s)
         GROUP BY dgeo1, dgeo2, dgeo3, dgeo4, dyear, country;
-        """ % {'country_in_sql' : self.country_in_sql}
+        """ % {'country_in_sql': self.country_in_sql}
         cursor = connection.cursor()
 
         cursor.execute(geo4_sql)
@@ -273,18 +269,18 @@ class Command(BaseCommand):
         for row in rows:
             great_grandparent_slug = self.make_slug(Location(), row['dgeo1'])
             great_grandparent = Location.objects.get(
-                name=row['dgeo1'], 
-                year=row['dyear'], 
+                name=row['dgeo1'],
+                year=row['dyear'],
                 slug=great_grandparent_slug,
                 country=row['country'],
                 geo_type='geo1')
 
             grandparent_slug = self.make_slug(great_grandparent, row['dgeo2'])
             grandparent_slug = "/".join([great_grandparent_slug, grandparent_slug])
-            
-            grandparent = Location.objects.get(
-                name=row['dgeo2'], 
-                year=row['dyear'], 
+
+            Location.objects.get(
+                name=row['dgeo2'],
+                year=row['dyear'],
                 slug=grandparent_slug,
                 country=row['country'],
                 geo_type='geo2')
@@ -293,27 +289,26 @@ class Command(BaseCommand):
             parent_slug = "/".join([grandparent_slug, parent_slug])
 
             parent = Location.objects.get(
-                name=row['dgeo3'], 
-                year=row['dyear'], 
-                slug = parent_slug,
+                name=row['dgeo3'],
+                year=row['dyear'],
+                slug=parent_slug,
                 country=row['country'],
                 geo_type='geo3')
-                
-            if not row['total']: 
+
+            if not row['total']:
                 row['total'] = 0
             child = parent.add_child(geo_type='geo4',
-                            name=row['dgeo4'], 
+                            name=row['dgeo4'],
                             country=row['country'],
                             total=row['total'],
                             recipients=row['count'],
-                            average=row['total']/row['count'],
+                            average=row['total'] / float(row['count']),
                             lat=row['lat'],
                             lon=row['lng'],
                             year=row['dyear']
-                            )
-            child.slug=self.make_slug(child, row['dgeo4'])
+            )
+            child.slug = self.make_slug(child, row['dgeo4'])
             child.save()
-
 
     def handle(self, **options):
         # stdout stuff is a hack to allow clean test output
@@ -323,8 +318,8 @@ class Command(BaseCommand):
         if country == "EU":
             self.country = countryCodes.country_codes()
         else:
-            self.country = [country,]
-        
+            self.country = [country]
+
         self.country_in_sql = ",".join(["'%s'" % c for c in self.country])
 
         print "deleting all locations"
@@ -339,12 +334,5 @@ class Command(BaseCommand):
         print "Making geo4"
         self.geo4()
         transaction.commit_unless_managed()
-        
-        sys.stdout = old_out
-        
 
-        
-        
-        
-        
-        
+        sys.stdout = old_out

@@ -1,7 +1,6 @@
-import django
 from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
-from django.db import connection, backend, models
+from django.core.management.base import BaseCommand
+from django.db import connection
 
 
 class Command(BaseCommand):
@@ -18,27 +17,24 @@ class Command(BaseCommand):
         help='Table to interact with.  Assumes all if none provided'),
     )
     help = 'Create or Drop indexes'
-    
-    
-    def __init__(self):
 
+    def __init__(self):
         self.cursor = connection.cursor()
-        
         self.indexes = {
-            'data_payment' : [
+            'data_payment': [
                     ('data_payment_amounteuro', 'amounteuro'),
                     ('data_payment_countrypayment', 'countrypayment'),
                     ('data_payment_globalrecipientidx', 'globalrecipientidx'),
                     ('data_payment_globalschemeid', 'globalschemeid'),
                     ('data_payment_year', 'year'),
-                ],
-            'data_recipient' : [
+            ],
+            'data_recipient': [
                     ('data_recipient_countrypayment', 'countrypayment'),
                     ('data_recipient_countryrecipient', 'countryrecipient'),
                     ('data_recipient_total', 'total'),
-                ]
+            ]
         }
-    
+
     def drop(self):
         for table in self.tables:
             for index in self.indexes[table]:
@@ -53,7 +49,7 @@ class Command(BaseCommand):
     def create(self):
         for table in self.tables:
             for index in self.indexes[table]:
-                print "dropping %s" % index[0]
+                print "creating %s (%s, %s)" % (index[0], table, index[1])
                 sql = """
                          BEGIN;
                          CREATE INDEX %s
@@ -62,27 +58,20 @@ class Command(BaseCommand):
                          (%s);
                          COMMIT;
                 """ % (index[0], table, index[1])
-                                
+
                 try:
                     self.cursor.execute(sql)
                 except Exception, e:
                     print e
                     pass
-        
-        
-    
+
     def handle(self, **options):
-        
         if options.get('table', False):
             self.tables = [options['table']]
         else:
-            self.tables = ['data_payment', 'data_recipient',]
-        
+            self.tables = ['data_payment', 'data_recipient']
+
         if options.get('drop'):
             self.drop()
         if options.get('create'):
             self.create()
-        
-        
-
-
