@@ -127,11 +127,11 @@ COMMENTS_APP = 'web.comments'
 
 EMAIL_PORT = 1025
 
-HAYSTACK_SITECONF = 'search_conf'
-HAYSTACK_SEARCH_ENGINE = 'xapian'
-HAYSTACK_XAPIAN_PATH = ROOT_PATH + '/xapian.db'
-HAYSTACK_BATCH_SIZE = 1000000
-HAYSTACK_INCLUDE_SPELLING = True
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+    }
+}
 
 DEFAULT_YEAR = 0
 LATEST_YEAR = 2009

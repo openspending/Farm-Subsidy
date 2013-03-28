@@ -87,12 +87,11 @@
         <h2>Discover who gets what from the Common Agricultural Policy</h2>
 
         {# search form #}
-        <form id="search_form" action="{% url search %}" method="POST" accept-charset="utf-8" class="transparent">
-            {% csrf_token %}
+        <form id="search_form" action="{% url search %}" method="get" accept-charset="utf-8" class="transparent">
             <h2><label for="search" class="section_title">Search</label></h2>
             <input type="text" name="q" value="{{ q }}" id="q" title="Enter a company name or place">
             <input type="submit" value="Search" class="submit">
-            <small>e.g. <a href="{% url search 'nestle' %}">Nestle</a> or <a href="{% url search 'windsor' %}">Windsor</a></small>
+            <small>e.g. <a href="{% url search %}?q=nestle">Nestle</a> or <a href="{% url search %}?q=windsor">Windsor</a></small>
         </form>
 
         {% if sum_of_payments %}
@@ -104,9 +103,11 @@
         <ul id="mainmenu">
             {% load active_url %}
             <li><a href="/" >Home</a></li>
-            <li><a href="{% url countries %}">Countries</a></li>            
+            <li><a href="{% url countries %}">Countries</a></li>
+            {% if list_enabled %}
             <li><a href="/lists/">Lists</a></li>
-            <li><a href="{% url transparency_index %}">Transparency Index</a></li>            
+            {% endif %}
+            <li><a href="{% url transparency_index %}">Transparency Index</a></li>
             <li><a href="/news/">News</a></li>
             <li class="last"><a href="/faq/">FAQs</a></li>
         </ul>

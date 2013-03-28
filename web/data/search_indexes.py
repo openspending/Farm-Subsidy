@@ -1,23 +1,21 @@
-import datetime
-from haystack.indexes import *
-from haystack import site
-from data.models import Recipient, Location
+from haystack import indexes
+from .models import Recipient, Location
 
 
-class RecipientIndex(SearchIndex):
-    text = CharField(document=True, use_template=True)
-    name = CharField(model_attr='name', default="unknown", weight=2)
-    country = CharField(model_attr='countrypayment', default="unknown", faceted=True)
-    
-    def prepare_name(self, obj):
-        obj._meta.module_name = "recipient"
+class RecipientIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name', default="unknown", weight=2)
+    country = indexes.CharField(model_attr='countrypayment', default="unknown",
+        faceted=True)
 
-site.register(Recipient, RecipientIndex)
+    def get_model(self):
+        return Recipient
 
 
-class LocationIndex(SearchIndex):
-    text = CharField(document=True, use_template=True)
-    name = CharField(model_attr='name', default="unknown", weight=2)
-    country = CharField(model_attr='country', default="unknown", faceted=True)
+class LocationIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name', default="unknown", weight=2)
+    country = indexes.CharField(model_attr='country', default="unknown", faceted=True)
 
-site.register(Location, LocationIndex)
+    def get_model(self):
+        return Location
