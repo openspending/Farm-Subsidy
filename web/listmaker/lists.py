@@ -2,14 +2,12 @@
 Redis read/write interface/backend for lists
 """
 
-import redis
 from django.contrib.contenttypes.models import ContentType
 
 import models
 
 EXPIRE_TIME = 60*60*24*10
 
-r = redis.Redis()
 
 def get_list_name(request):
     """
