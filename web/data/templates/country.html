@@ -53,7 +53,7 @@
     <thead>
       <th>Recipient name</th>
       <th class="money">Amount</th>
-    {% if list_name %}
+    {% if list_enabled and list_name %}
       <th class="list_head"></th>
     {% endif %}
     </thead>
@@ -62,7 +62,7 @@
         <tr>
           <td><a href="{{ recipient.get_absolute_url }}">{{ recipient.name }}</a></td>
           <td class="money">&euro;{{ recipient.total|floatformat:0|intcomma }}</td>
-          {% if list_name %}
+          {% if list_enabled and list_name %}
           <td>{% list_item_edit recipient %}</td>
           {% endif %}
         </tr>

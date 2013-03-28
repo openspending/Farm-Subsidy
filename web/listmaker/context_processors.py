@@ -1,5 +1,3 @@
-from models import List, ListItem
-
 def list_items(request):
     """
     Mainly gives the RequestContext information on if there is an active list
@@ -7,9 +5,9 @@ def list_items(request):
     """
     if request.session.get('list_name'):
         return {
-            'list_enabled' : True,
-            'list_name' : request.session.get('list_name'),
-            'list_object' : request.session.get('list_object'),
+            'list_enabled': False,
+            'list_name': request.session.get('list_name'),
+            'list_object': request.session.get('list_object'),
         }
     else:
         return {}

@@ -12,27 +12,29 @@
 {% endblock %}
 
 {% block page_title %}
-  {{ recipient.name }} --{% list_item_edit recipient %}--
+  {{ recipient.name }}{% if list_enabled %} --{% list_item_edit recipient %}--{% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
     {% for item in breadcrumbs %}
         {% for heading, content in item.items %}
-            {% for url in content %}      
-                &nbsp;<a href="{{ url.url }}" class="{{ url.class }}">&laquo; {{ url.name|title }}</a> 
+            {% for url in content %}
+                &nbsp;<a href="{{ url.url }}" class="{{ url.class }}">&laquo; {{ url.name|title }}</a>
             {% endfor %}
         {% endfor %}
     {% endfor %}
 {% endblock %}
 
 {% block content %}
-    {% list_item_edit recipient %}
+    {% if list_enabled %}
+      {% list_item_edit recipient %}
+    {% endif %}
     <div class="section">
         <p>{{ recipient.name }} is a recipient of farm subsidies in {% if recipient.town %}{{ recipient.town|title }},{% endif %} {{ country.name }}.</p>
         <p>{% if years_max_min %}Since {{ years_max_min.0 }}{% endif %} {{ recipient.name }} has received <strong>&euro;{{ recipient_total|floatformat:0|intcomma }}</strong> in payments from the European Union {% if has_direct or has_indirect or has_rural%}comprising of {% if has_direct %}<strong>direct subsidies</strong> (income support){% if has_indirect and has_rural %}, {%else%}{% if has_indirect or has_rural %} and {% else %}.{% endif %}{% endif %}{% endif %}{% if has_indirect %}<strong>indirect or other subsidies</strong> (market support such as export refunds or costs associated with food storage){% if has_rural %} and {%else%}.{%endif%}{% endif %}{% if has_rural %}<strong>rural development payments</strong> (for land conservation, income support for farms in dry, mountainous or cold places, or business development grants).{% endif %}{% else %}. {% endif %}</p>
     </div>
 
-  <div class="section">  
+  <div class="section">
     <h3>Details of payments</h3>
     <table>
         <thead>
@@ -58,8 +60,8 @@
         </tr>
     </table>
   </div>
-    
-    {% if recipient_lists %}        
+
+    {% if recipient_lists %}
     <div class="section">
         <h3>Lists</h3>
         <p>This recipient features in the following Lists (<a href="{% url lists_home %}">what are Lists?</a>):</p>
@@ -73,7 +75,7 @@
         </ul>
     </div>
     {% endif %}
-    
+
     <div class="section">
         {% get_comment_list for recipient as comment_list %}
         {% if not comment_list %}
@@ -89,14 +91,14 @@
               <div class="comment" id="comment-{{ comment.pk }}">
                   <a id="c{{ comment.pk }}"></a>
                   {{ comment.comment|urlize|markdown|typogrify }}
-                  <small class="comment_meta"> 
+                  <small class="comment_meta">
                       Added {{ comment.submit_date|naturalday }} by {{ comment.user }} | <a href="{{ request.META.PATH_INFO }}#comment-{{ comment.pk }}">#</a> | <a href="/about#contactus">something wrong?</a>
                     </small>
               </div>
             {% endfor %}
             </div>
             <div class="section">
-                <h3>Help us to improve this page</h3>            
+                <h3>Help us to improve this page</h3>
                 <p>Can you find any more information about {{ recipient.name }}? Is it a multi-national company of a small independent farm? What does it produce? Is it a subsidiary of a larger company? How large is it? Is it owned by anyone noteworthy?</p>
             </div>
         {% endif %}
@@ -121,9 +123,9 @@
                           <strong>Format help:</strong>
                           <br/>
                           Link: [text to display](http://example.net/)
-                          <br/>                          
+                          <br/>
                           List item: * example item
-                          <br/>                          
+                          <br/>
                           Bold text: *example text*
                       </p>
                       {% endifequal %}
@@ -143,7 +145,7 @@
                 <a href="{% url my_account:login %}">Create an account</a> or <a href="{% url my_account:login %}">sign in</a> to tell us something about {{recipient.name}}.
             </p>
         {% endif %}
-        
+
     </div>
 
 {% endblock %}
@@ -157,7 +159,7 @@
 
 
 
-    <h4>Address</h4>    
+    <h4>Address</h4>
     <p>
         {% if recipient.address1 %}{{ recipient.address1|title }}<br />{% endif %}
         {% if recipient.address2 %}{{ recipient.address2|title }}<br />{% endif %}
@@ -172,8 +174,8 @@
         {% if recipient.geo2 %}<a href="{{ recipient.geo2_url }}">View other recipients in {{ recipient.geo2|title }}</a><br />{% endif %}
         {% if recipient.geo1 %}<a href="{{ recipient.geo1_url }}">View other recipients in {{ recipient.geo1|title }}</a><br />{% endif %}
     </p>
-    
-    {% if closest %}        
+
+    {% if closest %}
     <h4>Near By</h4>
     <ul>
         {% for r in closest %}
@@ -181,9 +183,9 @@
         {% endfor %}
     </ul>
     {% endif %}
-    
+
     <div class="section">
         <a href="{% url csv_recipient recipient.pk %}">Download this recipient as a CSV file, for Excel</a>
     </div>
-    
+
 {% endblock %}
