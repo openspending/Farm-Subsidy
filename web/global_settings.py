@@ -121,10 +121,6 @@ LOGIN_URL = '/login/'
 AUTH_PROFILE_MODULE = "misc.Profile"
 DEFAULT_FROM_EMAIL = "team@farmsubsidy.org"
 
-
-TWITTER_USER = "farmsubsidy"
-TWITTER_TIMEOUT = 3600
-
 DEFAULT_CHARSET = "utf8"
 
 INTERNAL_IPS = ('127.0.0.1',)
