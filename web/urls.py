@@ -10,7 +10,7 @@ admin.autodiscover()
 handler500 = 'frontend.views.server_error'
 
 urlpatterns = patterns('',
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', include(admin.site.urls)),
     (r'', include('data.urls')),
     (r'^news/', include('features.urls')),
     (r'', include('frontend.urls', namespace="my_account")),
