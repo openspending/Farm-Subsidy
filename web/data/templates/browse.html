@@ -24,7 +24,9 @@
                 <tr>
                     <td><a href="{{ recipient.get_absolute_url }}">{{ recipient.name }}</a></td>
                     <td class="money">&euro;{{ recipient.total|floatformat:0|intcomma }}</td>
-                    <td>{% list_item_edit recipient %}</td>
+                    {% if list_name %}
+                        <td>{% list_item_edit recipient %}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
