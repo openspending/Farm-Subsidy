@@ -144,6 +144,12 @@ def country(request, country, year=DEFAULT_YEAR):
     )
 
 
+def recipient_short(request, country, recipient_id):
+    country = country.upper()
+    recipient = get_object_or_404(models.Recipient, globalrecipientidx=recipient_id)
+    return redirect(recipient)
+
+
 def recipient(request, country, recipient_id, name):
     """
     View for recipient page.
