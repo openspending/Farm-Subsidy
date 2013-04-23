@@ -1,4 +1,4 @@
-Django==1.4
+Django==1.5.1
 Markdown==2.3.1
 South==0.7.6
 coverage==3.6
@@ -8,7 +8,7 @@ django-pagination==1.0.5
 django-paging==0.2.4
 django-piston==0.2.2
 django-profiles==0.2
-django-registration==0.8
+https://bitbucket.org/ubernostrum/django-registration/get/default.zip
 django-tagging==0.3
 django-templatetag-sugar==0.1
 django-treebeard==1.52
@@ -26,3 +26,4 @@ six==1.2.0
 smartypants==1.6.0.3
 typogrify==1.0
 wsgiref==0.1.2
+unicodecsv==0.9.4
