@@ -20,14 +20,21 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+STATIC_URL = '/media/'
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = PROJECT_PATH + '/media/'
+
+STATIC_ROOT = os.path.join(PROJECT_PATH, 'static')
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_PATH, "media"),
+)
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/adminmedia/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'dm195c_n(qv4!x-o7!5akh$q19vvrw$o6@2p_&^e(()qi6zojl'
@@ -100,6 +107,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
+    'django.core.context_processors.static',
     "django.core.context_processors.request",
     'data.context_processors.country',
     'data.context_processors.ip_country',
@@ -158,6 +166,6 @@ DATE_FORMAT = 'j F Y'
 FILE_CACHE_PATH = ROOT_PATH + "/data/cache"
 
 # GHEAT_ALWAYS_BUILD = False
-GHEAT_FILESYSTEM_STORAGE_DIR = MEDIA_ROOT + "heatmap/tiles/"
+GHEAT_FILESYSTEM_STORAGE_DIR = STATIC_ROOT + "heatmap/tiles/"
 GHEAT_BUILD_EMPTIES = False
 GHEAT_STORAGE_BACKEND = 1
