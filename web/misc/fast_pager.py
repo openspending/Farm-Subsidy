@@ -1,9 +1,9 @@
 from django.core.paginator import Paginator as oPaginator
 from django.core.paginator import Page as oPage
 
+
 class Paginator(oPaginator):
-    
-    def __init__(self, object_list, per_page, orphans=0, 
+    def __init__(self, object_list, per_page, orphans=0,
                 allow_empty_first_page=True, where_names=['total', 'globalrecipientidx'], where_list=[]):
         self.object_list = object_list
         self.per_page = per_page
@@ -12,12 +12,12 @@ class Paginator(oPaginator):
         self._num_pages = self._count = None
         self.where_list = where_list
         self.where_names = where_names
-    
+
     def page(self, number, start):
         "Returns a Page object for the given 1-based page number."
         self.where_list = start.split('-')
 
-        first_page = last_page = False
+        first_page, last_page = False, False
 
         number = self.validate_number(number)
         bottom = 0
@@ -27,28 +27,30 @@ class Paginator(oPaginator):
 
         if len(self.where_list) == len(self.where_names):
             where_names = ",".join(self.where_names)
-            where_list = ",".join("'%s'" %i for i in self.where_list)
+            where_list = ",".join("'%s'" % i for i in self.where_list)
             qs_slice = qs_slice.extra(where=["(%s) <= (%s)" % (where_names, where_list)])
             back_slice = self.object_list.extra(where=["(%s) >= (%s)" % (where_names, where_list)])
         else:
             qs_slice = qs_slice
             back_slice = qs_slice[:self.per_page]
-        
+
         back_slice = back_slice.reverse()
-        
+
         if number == 1:
             self.previous_obj = None
         else:
             try:
                 self.previous_obj = list(back_slice)[top]
-            except:
+            except IndexError:
                 self.previous_obj = list(back_slice)[-1]
-
-        self.next_obj = qs_slice[top]
+        try:
+            self.next_obj = qs_slice[top]
+        except IndexError:
+            self.next_obj = None
 
         qs_slice = qs_slice[bottom:top]
 
-        return Page(qs_slice, number, self)    
+        return Page(qs_slice, number, self)
 
 
 class Page(oPage):
