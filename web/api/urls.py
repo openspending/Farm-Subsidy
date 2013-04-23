@@ -1,20 +1,23 @@
 """
-Main controler for the API. This is, annoyingly, split in to two areas: 
+Main controler for the API. This is, annoyingly, split in to two areas:
 
-1) The django-piston controled stuff, making an API out of the models and 
-2) Normal django views, for things like KML and CSV output that piston can't 
+1) The django-piston controled stuff, making an API out of the models and
+2) Normal django views, for things like KML and CSV output that piston can't
    support.
 
 Note, making a piston emmiter for these might work, but it's easier to do it
 this way at the moment
 """
 
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, url
+from django.http import HttpResponseRedirect
 from piston.resource import Resource
-from web.api.handlers import *
+from web.api.handlers import (RecipientHandler,
+        SearchHandler, CountryOverviewHandler)
 from web.data import countryCodes
 
 import views
+
 
 def country_url(pattern, *args, **kwargs):
     """
@@ -42,12 +45,10 @@ urlpatterns = patterns('',
 
     # # Geo API
     # url(r'v1/geo/(?P<lng>[^/]+),(?P<lat>[^/]+)\.(?P<format>[^/]+)', views.geo),
-      
-    # API redirect to docs 
-    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/api/docs/'}),
 
-    # Documentation 
+    # API redirect to docs
+    url(r'^$', lambda r: HttpResponseRedirect('/api/docs/')),
+
+    # Documentation
     url(r'^docs/(?P<path>.*)$', views.documentation, name='api_doc'),
 )
-
-
