@@ -78,6 +78,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.syndication',
+    'django.contrib.staticfiles',
+
     'web.api',
     'web.comments',
     'countryinfo',
