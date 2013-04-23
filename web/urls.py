@@ -1,10 +1,12 @@
 from django.conf.urls.defaults import patterns, include
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.gis import admin
+
 from web import settings
 
 # Uncomment the next two lines to enable the adminn:
 # from django.contrib import admin
 
-from django.contrib.gis import admin
 admin.autodiscover()
 
 handler500 = 'frontend.views.server_error'
@@ -27,7 +29,4 @@ urlpatterns = patterns('',
 )
 
 if settings.DEBUG:
-    urlpatterns += patterns('django.views',
-        (r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:], 'static.serve',
-        {'document_root': settings.MEDIA_ROOT}),
-    )
+    urlpatterns += staticfiles_urlpatterns()
