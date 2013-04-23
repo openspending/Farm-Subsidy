@@ -12,7 +12,7 @@
         {{ feature.date|date }}.
         {{ feature.teaser|markdown|typogrify }}
     {% endfor %}
-    <a href="{% url feature_list %}">View All</a>
+    <a href="{% url 'feature_list' %}">View All</a>
 </div>
 
 <div class="section">
@@ -22,7 +22,7 @@
         {{ feed_item.date|date }}.
         {{ feed_item.description|markdown|typogrify }}
     {% endfor %}    
-    <a href="{% url media_list %}">View All</a>
+    <a href="{% url 'media_list' %}">View All</a>
 </div>
     
     

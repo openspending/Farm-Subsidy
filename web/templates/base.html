@@ -10,21 +10,21 @@
     {% load inthenews %}
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>{% block title %}{{title}}{% endblock %} | FarmSubsidy.org</title>
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/reset-min.css"/>
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/main.css"  media="all"/>
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/print.css"  media="print"/>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery.example.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}/js/jquery-ui-1.7.1.custom.min.js"></script>
-    <script src="{{ MEDIA_URL }}/js/scripts.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/reset-min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css"  media="all"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/print.css"  media="print"/>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.example.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.7.1.custom.min.js"></script>
+    <script src="{{ STATIC_URL }}js/scripts.js" type="text/javascript" charset="utf-8"></script>
 
-    <link href="{% url feature_feed %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
+    <link href="{% url 'feature_feed' %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
 
     {% if list_enabled %}
         <link rel="stylesheet" href="/media/css/custom_lists.css" type="text/css" media="screen, projection">
-        <script src="{{ MEDIA_URL }}/js/custom_lists.js" type="text/javascript" charset="utf-8"></script>
-        <script src="{{ MEDIA_URL }}/js/lists.js" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ STATIC_URL }}js/custom_lists.js" type="text/javascript" charset="utf-8"></script>
+        <script src="{{ STATIC_URL }}js/lists.js" type="text/javascript" charset="utf-8"></script>
     {% endif %}
 
 </head>
@@ -34,7 +34,7 @@
 {# Topbar #}
 <div id="topbar">
     <a href="http://www.twitter.com/farmsubsidy/">
-        <img src="{{MEDIA_URL}}/images/follow.png" alt="Follow us on Twitter"/>
+        <img src="{{ STATIC_URL }}images/follow.png" alt="Follow us on Twitter"/>
       </a>
     <form method="post" action="http://app.icontact.com/icp/signup.php" accept-charset="UTF-8" onsubmit="return verifyRequired();">
             <fieldset>
@@ -66,9 +66,9 @@
     </form>
     <div class="loginbar">
     {% if request.user.is_authenticated %}
-        Logged in as {{ request.user.username }} | <a href="{{ request.user.profile_set.all.0.get_absolute_url }}">My account</a> | <a href="{% url my_account:logout %}">Sign out</a>
+        Logged in as {{ request.user.username }} | <a href="{{ request.user.profile_set.all.0.get_absolute_url }}">My account</a> | <a href="{% url 'my_account:logout' %}">Sign out</a>
     {% else %}
-        <a href="{% url my_account:login %}">Create an account</a> or <a href="{% url my_account:login %}">sign in</a>
+        <a href="{% url 'my_account:login' %}">Create an account</a> or <a href="{% url 'my_account:login' %}">sign in</a>
     {% endif %}
     </div>
 </div>
@@ -87,11 +87,11 @@
         <h2>Discover who gets what from the Common Agricultural Policy</h2>
 
         {# search form #}
-        <form id="search_form" action="{% url search %}" method="get" accept-charset="utf-8" class="transparent">
+        <form id="search_form" action="{% url 'search' %}" method="get" accept-charset="utf-8" class="transparent">
             <h2><label for="search" class="section_title">Search</label></h2>
             <input type="text" name="q" value="{{ q }}" id="q" title="Enter a company name or place">
             <input type="submit" value="Search" class="submit">
-            <small>e.g. <a href="{% url search %}?q=nestle">Nestle</a> or <a href="{% url search %}?q=windsor">Windsor</a></small>
+            <small>e.g. <a href="{% url 'search' %}?q=nestle">Nestle</a> or <a href="{% url 'search' %}?q=windsor">Windsor</a></small>
         </form>
 
         {% if sum_of_payments %}
@@ -103,11 +103,11 @@
         <ul id="mainmenu">
             {% load active_url %}
             <li><a href="/" >Home</a></li>
-            <li><a href="{% url countries %}">Countries</a></li>
+            <li><a href="{% url 'countries' %}">Countries</a></li>
             {% if list_enabled %}
             <li><a href="/lists/">Lists</a></li>
             {% endif %}
-            <li><a href="{% url transparency_index %}">Transparency Index</a></li>
+            <li><a href="{% url 'transparency_index' %}">Transparency Index</a></li>
             <li><a href="/news/">News</a></li>
             <li class="last"><a href="/faq/">FAQs</a></li>
         </ul>
@@ -197,7 +197,7 @@
 
         <div id="about">
             <a href="http://eutransparency.org">
-                <img src="{{MEDIA_URL}}/images/eutlogo.png" width="241" height="92" />
+                <img src="{{ STATIC_URL }}images/eutlogo.png" width="241" height="92" />
             </a>
               <p>
                     Farmsubsidy.org is a project of EU Transparency, a non-profit organisation.
@@ -233,7 +233,7 @@
                 <dd>
                     <ul>
                         <li><a href="http://github.com/eutransparency/Farm-Subsidy">Get the code</a></li>
-                        <li><a href="{% url download %}">Get the raw data</a></li>
+                        <li><a href="{% url 'download' %}">Get the raw data</a></li>
                         <li><a href="/api/">API</a></li>
                     </ul>
                 </dd>

@@ -1,8 +1,8 @@
 <div id="user_menu">
   {% if user.is_authenticated %}
-    <a href="{% url profiles.views.profile_detail user.username %}">{{ user.username }}</a> Logged in <a href="{% url auth_logout %}">Log out</a>
+    <a href="{% url profiles.views.profile_detail user.username %}">{{ user.username }}</a> Logged in <a href="{% url 'auth_logout' %}">Log out</a>
   {% else %}
-   <a href="{% url login %}">Create an account or Log in</a>
+   <a href="{% url 'login' %}">Create an account or Log in</a>
   {% endif %}  
   
 </div>

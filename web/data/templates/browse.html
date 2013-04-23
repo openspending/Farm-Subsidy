@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block page_title %}
-    Browse <a href="{% url country country.code %}">{{ country.name }}</a>, All years
+    Browse <a href="{% url 'country' country.code %}">{{ country.name }}</a>, All years
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,9 @@
         {% if recipients.has_previous %}
             <a href="{{ recipients.format_previous_link }}">Previous</a>
         {% endif %}
-        <a href="{{ recipients.format_next_link }}">Next</a>
+        {% if recipients.has_next %}
+            <a href="{{ recipients.format_next_link }}">Next</a>
+        {% endif %}
     </h4>
 {% endblock %}
 

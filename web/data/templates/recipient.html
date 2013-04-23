@@ -64,7 +64,7 @@
     {% if recipient_lists %}
     <div class="section">
         <h3>Lists</h3>
-        <p>This recipient features in the following Lists (<a href="{% url lists_home %}">what are Lists?</a>):</p>
+        <p>This recipient features in the following Lists (<a href="{% url 'lists_home' %}">what are Lists?</a>):</p>
         <ul>
             {% for list in recipient_lists %}
             <li>
@@ -142,7 +142,7 @@
             <p id="disabled_comments">
                 <textarea disabled="disabled"></textarea>
                 <br/>
-                <a href="{% url my_account:login %}">Create an account</a> or <a href="{% url my_account:login %}">sign in</a> to tell us something about {{recipient.name}}.
+                <a href="{% url 'my_account:login' %}">Create an account</a> or <a href="{% url 'my_account:login' %}">sign in</a> to tell us something about {{recipient.name}}.
             </p>
         {% endif %}
 
@@ -185,7 +185,7 @@
     {% endif %}
 
     <div class="section">
-        <a href="{% url csv_recipient recipient.pk %}">Download this recipient as a CSV file, for Excel</a>
+        <a href="{% url 'csv_recipient' recipient.pk %}">Download this recipient as a CSV file, for Excel</a>
     </div>
 
 {% endblock %}

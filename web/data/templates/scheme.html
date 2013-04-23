@@ -18,14 +18,14 @@
         {% if selected_year == 0 %}
             <span class="selected">All Years</span>
         {% else %}
-            <a href="{% url scheme_view country=country.code globalschemeid=scheme.pk name=scheme.nameenglish|slugify %}" class="selected">All Years</a>
+            <a href="{% url 'scheme_view' country=country.code globalschemeid=scheme.pk name=scheme.nameenglish|slugify %}" class="selected">All Years</a>
         {% endif %}
     
         {% for year in scheme_years %}
             {% if year.year == selected_year  %}
                 <strong>{{ year.year }}</strong>
             {% else %}
-                {% url scheme_view country=country.code globalschemeid=scheme.pk name=scheme.nameenglish|slugify year=year.year as year_url %}
+                {% url 'scheme_view' country=country.code globalschemeid=scheme.pk name=scheme.nameenglish|slugify year=year.year as year_url %}
                 <a href="{{ year_url }}">{{ year.year }}</a>
             {% endif %}
         {% endfor %}

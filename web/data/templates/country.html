@@ -33,14 +33,14 @@
     {% if selected_year == 0 %}
         <span class="selected">All Years</span>
     {% else %}
-        <a href="{% url country country=country.code %}" class="selected">All Years</a>
+        <a href="{% url 'country' country=country.code %}" class="selected">All Years</a>
     {% endif %}
     
     {% for year in years %}
         {% if year.year == selected_year  %}
             <strong>{{ year.year }}</strong>
         {% else %}
-            {% url country_year country=country.code year=year.year as year_url %}
+            {% url 'country_year' country=country.code year=year.year as year_url %}
             <a href="{{ year_url }}">{{ year.year }}</a>
         {% endif %}
     {% endfor %}
@@ -71,7 +71,7 @@
     </tbody>
   </table>
   <p class="more_info">
-    <a href="{% url browse country=country.code %}">View all recipients &raquo;</a>
+    <a href="{% url 'browse' country=country.code %}">View all recipients &raquo;</a>
   </p>
 </div>
 
@@ -90,7 +90,7 @@
   {% endfor %}
   </table>
   <p class="more_info">
-    <a href="{% url all_locations country=country.code year=selected_year %}">View all regions &raquo;</a>
+    <a href="{% url 'all_locations' country=country.code year=selected_year %}">View all regions &raquo;</a>
   </p>
 </div>
 
@@ -110,7 +110,7 @@
     {% endfor %}
     </table>
     <p class="more_info">
-      <a href="{% url all_schemes country=country.code %}">View all schemes &raquo;</a>
+      <a href="{% url 'all_schemes' country=country.code %}">View all schemes &raquo;</a>
     </p>
 </div>
 

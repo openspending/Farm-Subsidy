@@ -28,7 +28,7 @@
       <td>{{ file.filename }}</td>
       <td>{{ file.format }}</td>
       <td>{{ file.description }}</td>
-      <td><a href="{% url download_file file.pk %}">{% trans "Download" %}</a></td>
+      <td><a href="{% url 'download_file' file.pk %}">{% trans "Download" %}</a></td>
     </tr>
     {% endfor %}
   </tbody>

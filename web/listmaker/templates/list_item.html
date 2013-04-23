@@ -10,7 +10,7 @@
         
 
     <p class="hint">  
-        <a href="{% url edit_list_items list_item.pk %}">Edit this list</a> or <a href="{% url edit_list list_item.pk %}">edit title and description</a>
+        <a href="{% url 'edit_list_items' list_item.pk %}">Edit this list</a> or <a href="{% url 'edit_list' list_item.pk %}">edit title and description</a>
         {% if list_object.pk == list_item.pk %}
         <br />
           NOTE: Because you are editing this list, the items below may not match the (unsaved) items you have added or removed.
@@ -44,7 +44,7 @@
   {% else %}
       {% ifequal user.pk list_item.user.pk  %}
           There is nothing in your list yet.  
-          <p class="hint"><a href="{% url edit_list_items list_item.pk %}">Add Items</a></p>
+          <p class="hint"><a href="{% url 'edit_list_items' list_item.pk %}">Add Items</a></p>
       {% else %}
           The list owner hasn't added any items to this list yet.
       {% endifequal %}

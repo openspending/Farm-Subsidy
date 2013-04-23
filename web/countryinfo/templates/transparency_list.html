@@ -28,7 +28,7 @@
             {% for item in list %}
             <tr>
                 <td>{{ item.rank|ordinal }}</td>
-                <td><a href="{% url country item.country %}">{% code_to_name item.country %}</a></td>
+                <td><a href="{% url 'country' item.country %}">{% code_to_name item.country %}</a></td>
                 <td>{{ item.score }}%</td>
             </tr>
             {% endfor %}            

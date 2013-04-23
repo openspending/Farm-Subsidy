@@ -12,7 +12,7 @@
         <blockquote>{{ annotation.comment|markdown|striptags|truncatewords:30 }}</blockquote>
 
         {% endfor %}
-        <a href="{% url my_account:annotations %}">View All</a>
+        <a href="{% url 'my_account:annotations' %}">View All</a>
     </div>
 {% endif %}
 
