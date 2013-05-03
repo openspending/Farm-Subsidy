@@ -22,27 +22,26 @@ class Command(BaseCommand):
         'recipient totals'
         """
 
-        cursor = connection.cursor()
-        cursor.execute("""
-            DELETE FROM recipient_totals WHERE country=%(country)s;
-            INSERT INTO recipient_totals
-            SELECT globalrecipientidx, SUM(amounteuro) as total, %(country)s
-            FROM data_payment
-            WHERE countrypayment=%(country)s
-            GROUP BY globalrecipientidx;
-            COMMIT;
-        """, {'country': self.country})
+        # cursor = connection.cursor()
+        # cursor.execute("""
+        #     DELETE FROM data_temptotals WHERE country=%(country)s;
+        #     INSERT INTO data_temptotals
+        #     SELECT globalrecipientid, SUM(amounteuro) as total, %(country)s
+        #     FROM data_payment
+        #     WHERE countrypayment=%(country)s
+        #     GROUP BY globalrecipientid;
+        #     COMMIT;
+        # """, {'country': self.country})
 
         cursor = connection.cursor()
         cursor.execute("""
             UPDATE data_recipient
-            SET total = t.total
-            FROM (
-                SELECT *
-                FROM recipient_totals
-                WHERE country=%(country)s
-                ) as t
-            WHERE t.recipient_id = globalrecipientidx;
+            SET total = (
+                SELECT SUM(amounteuro)
+                FROM data_payment
+                WHERE data_recipient.globalrecipientid = globalrecipientid
+                )
+             WHERE countrypayment=%(country)s;
             COMMIT;
             """, {'country': self.country})
 
@@ -52,10 +51,10 @@ class Command(BaseCommand):
             DELETE FROM data_totalyear WHERE country=%(country)s;
             INSERT INTO data_totalyear (recipient_id, year, total, country)
                 (
-                SELECT globalrecipientidx, year, SUM(amounteuro) as total, countrypayment
+                SELECT globalrecipientid, year, SUM(amounteuro) as total, countrypayment
                 FROM data_payment
                 WHERE countrypayment=%(country)s
-                GROUP BY globalrecipientidx, year, countrypayment);
+                GROUP BY globalrecipientid, year, countrypayment);
         """, {'country': self.country})
 
     def recipient_year(self):
@@ -64,13 +63,13 @@ class Command(BaseCommand):
         cursor.execute("""
             DELETE FROM data_recipientyear WHERE country=%(country)s;
             INSERT INTO data_recipientyear (recipient_id, name, year, country, total)
-            SELECT pay.globalrecipientidx, r.name, pay.year, pay.countrypayment, pay.total FROM
-                (SELECT globalrecipientidx, year, countrypayment, sum(amounteuro) as total
+            SELECT pay.globalrecipientid, r.name, pay.year, pay.countrypayment, pay.total FROM
+                (SELECT globalrecipientid, year, countrypayment, sum(amounteuro) as total
                 FROM data_payment
-                AND countrypayment=%(country)s
-                GROUP BY countrypayment, globalrecipientidx, year) as pay
+                WHERE countrypayment=%(country)s
+                GROUP BY countrypayment, globalrecipientid, year) as pay
             JOIN data_recipient r
-            ON r.globalrecipientidx=pay.globalrecipientidx;
+            ON r.globalrecipientid=pay.globalrecipientid;
             COMMIT;
         """, {'country': self.country})
 
@@ -134,12 +133,11 @@ class Command(BaseCommand):
             COMMIT;
             BEGIN;
             INSERT INTO data_recipientschemeyear (recipient_id, scheme_id, country, year, total)
-            SELECT globalrecipientidx, globalschemeid, %(country)s, '0', SUM(amounteuro)
+            SELECT globalrecipientid, globalschemeid, %(country)s, '0', SUM(amounteuro)
             FROM data_payment
-            GROUP BY globalschemeid, globalrecipientidx;
+            GROUP BY globalschemeid, globalrecipientid;
             COMMIT;
         """, {'country': self.country})
-
 
     def handle(self, **options):
         self.country = options.get('country')
@@ -150,7 +148,10 @@ class Command(BaseCommand):
 
         print "recipients"
         self.totals()
-        #
+
+        print "recipient year"
+        self.recipient_year()
+
         print "schemes"
         self.schemes()
 
