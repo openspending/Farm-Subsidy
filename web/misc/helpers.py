@@ -70,7 +70,7 @@ class CachedCountQuerySetWrapper(object):
         return self.count()
 
 
-def QuerySetCache(qs, key=None, cache_type='deafult'):
+def QuerySetCache(qs, key=None, cache_type='default'):
     """
     Caches the *whole* queryset as it is given to the function.
 
@@ -92,7 +92,7 @@ def QuerySetCache(qs, key=None, cache_type='deafult'):
         return qs
 
     # Use the django built in cache
-    if cache_type == 'deafult':
+    if cache_type == 'default':
         cached_qs = cache.get(key)
         if cached_qs:
             cached_qs = cPickle.loads(cached_qs)
