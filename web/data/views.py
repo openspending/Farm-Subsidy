@@ -146,7 +146,7 @@ def country(request, country, year=DEFAULT_YEAR):
 
 def recipient_short(request, country, recipient_id):
     country = country.upper()
-    recipient = get_object_or_404(models.Recipient, globalrecipientidx=recipient_id)
+    recipient = get_object_or_404(models.Recipient, pk=recipient_id)
     return redirect(recipient)
 
 
@@ -155,15 +155,15 @@ def recipient(request, country, recipient_id, name):
     View for recipient page.
 
     - `country` ISO country, as defined in countryCodes
-    - `recipient_id` is actually a globalrecipientidx in the date
+    - `recipient_id` is actually a globalrecipientid in the date
 
     """
 
     country = country.upper()
 
-    recipient = get_object_or_404(models.Recipient, globalrecipientidx=recipient_id)
+    recipient = get_object_or_404(models.Recipient, pk=recipient_id)
 
-    payments = models.Payment.objects.select_related().filter(recipient=recipient_id).order_by('-year', '-amounteuro')
+    payments = models.Payment.objects.select_related().filter(recipient=recipient).order_by('-year', '-amounteuro')
     expanded = request.GET.get('expand', False)
     if not expanded:
         # Hack to stop *all* payments getting displayed, when there are sometimes

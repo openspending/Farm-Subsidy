@@ -79,7 +79,7 @@ def make_fig(request, type):
 def recipient(request, recipient_id):
   figure(figsize=(1, 1), linewidth=0) # image dimensions  
 
-  payments = FarmData.data.objects.recipient_payments(globalrecipientidx=recipient_id, group=True)
+  payments = FarmData.data.objects.recipient_payments(pk=recipient_id, group=True)
   
   fig = plt.figure()
   fig.set_figsize_inches(5,2)  

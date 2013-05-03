@@ -4,7 +4,7 @@ from django.core.paginator import Page as oPage
 
 class Paginator(oPaginator):
     def __init__(self, object_list, per_page, orphans=0,
-                allow_empty_first_page=True, where_names=['total', 'globalrecipientidx'], where_list=[]):
+                allow_empty_first_page=True, where_names=['total', 'globalrecipientid'], where_list=[]):
         self.object_list = object_list
         self.per_page = per_page
         self.orphans = orphans

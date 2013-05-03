@@ -31,8 +31,8 @@ class CountryYear(models.Model):
 class Recipient(models.Model):
     recipientid = models.CharField(max_length=10)
     recipientidx = models.CharField(max_length=10)
-    globalrecipientid = models.CharField(max_length=10)
-    globalrecipientidx = models.CharField(max_length=10, primary_key=True)
+    globalrecipientid = models.CharField(primary_key=True, max_length=10)
+    globalrecipientidx = models.CharField(max_length=10)
     name = models.TextField(null=True)
     address1 = models.TextField(blank=True, null=True)
     address2 = models.TextField(blank=True, null=True)
@@ -137,9 +137,9 @@ class GeoRecipient(geo_models.Model):
 class Payment(models.Model):
     paymentid = models.TextField()
     globalpaymentid = models.CharField(max_length=10, primary_key=True)
-    globalrecipientid = models.TextField()
-    recipient = models.ForeignKey(Recipient,
-            db_column='globalrecipientidx', max_length=10, db_index=True)
+    recipient = models.ForeignKey(Recipient, db_column='globalrecipientid',
+                                  max_length=10, db_index=True)
+    globalrecipientidx = models.CharField(max_length=10, db_index=True)
     scheme = models.ForeignKey('Scheme', db_column='globalschemeid')
     amounteuro = models.FloatField(null=True, db_index=True)  # This field type is a guess.
     amountnationalcurrency = models.FloatField(null=True)  # This field type is a guess.

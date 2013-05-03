@@ -35,7 +35,7 @@ class RecipientHandler(BaseHandler):
     def read(self, request):
         required_args(request, ['id'])
 
-        recipient = Recipient.objects.select_related().get(globalrecipientidx=request.GET['id'])
+        recipient = Recipient.objects.select_related().get(pk=request.GET['id'])
         payments = recipient.payment_set.all()
 
         if request.GET.get('format') == 'kml':
