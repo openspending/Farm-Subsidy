@@ -84,6 +84,9 @@ def QuerySetCache(qs, key=None, cache_type='default'):
     You have been warned.
     """
 
+    if settings.DEBUG:
+        return qs
+
     key = make_key(qs, key)
 
     def write_to_cache(file_path, qs):
