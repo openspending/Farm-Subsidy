@@ -52,7 +52,7 @@ class Recipient(models.Model):
     geo4nationallanguage = models.TextField(blank=True, null=True)
     lat = models.FloatField(blank=True, null=True, default=None)
     lng = models.FloatField(blank=True, null=True, default=None)
-    total = models.FloatField(default=0.0, db_index=True)
+    total = models.FloatField(default=0.0, null=True, db_index=True)
 
     objects = RecipientManager()
 
@@ -100,7 +100,7 @@ class RecipientYear(models.Model):
     name = models.TextField(null=True)
     year = models.IntegerField(blank=True, null=True)
     country = models.CharField(blank=True, max_length=2)
-    total = models.FloatField(default=0.0, db_index=True)
+    total = models.FloatField(default=0.0, null=True, db_index=True)
 
     objects = RecipientYearManager()
 
@@ -174,7 +174,7 @@ class SchemeYear(models.Model):
     nameenglish = models.TextField(blank=True)
     countrypayment = models.CharField(blank=True, max_length=2)
     year = models.IntegerField(blank=True, null=True)
-    total = models.FloatField(default=0.0)
+    total = models.FloatField(null=True, default=0.0)
 
     objects = SchemeYearManager()
 
@@ -196,7 +196,7 @@ class RecipientSchemeYear(models.Model):
     scheme = models.ForeignKey(Scheme)
     country = models.CharField(blank=True, max_length=2)
     year = models.IntegerField(blank=True, null=True)
-    total = models.FloatField(default=0.0)
+    total = models.FloatField(null=True, default=0.0)
 
     def __unicode__(self):
         return u"%s - %s" (self.recipient, self.year)
@@ -236,7 +236,7 @@ class SchemeType(models.Model):
 class TotalYear(models.Model):
     recipient = models.ForeignKey(Recipient, db_index=True)
     year = models.IntegerField(blank=True, null=True, db_index=True)
-    total = models.FloatField(default=0.0, db_index=True)
+    total = models.FloatField(null=True, default=0.0, db_index=True)
     country = models.CharField(blank=False, max_length=2)
 
 
@@ -247,7 +247,7 @@ class Location(MP_Node):
     slug = models.SlugField(max_length=255)
     country = models.CharField(blank=True, max_length=100)
     recipients = models.IntegerField(blank=True, null=True)
-    total = models.FloatField()
+    total = models.FloatField(null=True, default=0.0)
     average = models.FloatField()
     lat = models.FloatField(null=True)
     lon = models.FloatField(null=True)
