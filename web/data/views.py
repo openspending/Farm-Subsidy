@@ -198,8 +198,8 @@ def recipient(request, country, recipient_id, name):
 
     # lists this recipient is in:
     recipient_lists = []
-    for list_obj in ListItem.objects.filter(object_id=recipient_id):
-        recipient_lists.append(list_obj.list_id)
+    # for list_obj in ListItem.objects.filter(object_id=recipient_id):
+    #     recipient_lists.append(list_obj.list_id)
 
     years_max_min = models.CountryYear.objects.year_max_min(country)
     return render_to_response('recipient.html',
