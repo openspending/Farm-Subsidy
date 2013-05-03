@@ -82,6 +82,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
 
+    'south',
+
     'web.api',
     'web.comments',
     'countryinfo',

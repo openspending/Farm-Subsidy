@@ -19,7 +19,7 @@ import countryCodes
 class CountryYear(models.Model):
     year = models.IntegerField(blank=True, null=True)
     country = models.CharField(blank=True, max_length=2)
-    total = models.FloatField()
+    total = models.FloatField(default=0.0)
 
     class Meta:
         get_latest_by = 'year'
@@ -52,7 +52,7 @@ class Recipient(models.Model):
     geo4nationallanguage = models.TextField(blank=True, null=True)
     lat = models.FloatField(blank=True, null=True, default=None)
     lng = models.FloatField(blank=True, null=True, default=None)
-    total = models.FloatField(blank=True, null=True, db_index=True)
+    total = models.FloatField(default=0.0, db_index=True)
 
     objects = RecipientManager()
 
@@ -100,7 +100,7 @@ class RecipientYear(models.Model):
     name = models.TextField(null=True)
     year = models.IntegerField(blank=True, null=True)
     country = models.CharField(blank=True, max_length=2)
-    total = models.FloatField()
+    total = models.FloatField(default=0.0, db_index=True)
 
     objects = RecipientYearManager()
 
@@ -156,7 +156,7 @@ class Scheme(models.Model):
     nameenglish = models.TextField(db_index=True)
     budgetlines8digit = models.CharField(max_length=10, null=True)
     countrypayment = models.CharField(max_length=2)
-    total = models.FloatField()
+    total = models.FloatField(null=True, default=0.0)
 
     objects = SchemeManager()
 
@@ -174,7 +174,7 @@ class SchemeYear(models.Model):
     nameenglish = models.TextField(blank=True)
     countrypayment = models.CharField(blank=True, max_length=2)
     year = models.IntegerField(blank=True, null=True)
-    total = models.FloatField()
+    total = models.FloatField(default=0.0)
 
     objects = SchemeYearManager()
 
@@ -196,7 +196,7 @@ class RecipientSchemeYear(models.Model):
     scheme = models.ForeignKey(Scheme)
     country = models.CharField(blank=True, max_length=2)
     year = models.IntegerField(blank=True, null=True)
-    total = models.FloatField()
+    total = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return u"%s - %s" (self.recipient, self.year)
@@ -236,7 +236,7 @@ class SchemeType(models.Model):
 class TotalYear(models.Model):
     recipient = models.ForeignKey(Recipient, db_index=True)
     year = models.IntegerField(blank=True, null=True, db_index=True)
-    total = models.FloatField(db_index=True)
+    total = models.FloatField(default=0.0, db_index=True)
     country = models.CharField(blank=False, max_length=2)
 
 
