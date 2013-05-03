@@ -42,8 +42,9 @@ class SchemeYearManager(models.Manager):
         if country and country is not "EU":
             kwargs['countrypayment'] = country
 
-        schemes = self.all()
-        schemes = schemes.filter(**kwargs)
-        schemes = schemes.annotate(scheme_total=Sum('total'))
-        schemes = schemes.order_by('-scheme_total')
+        schemes = (self.get_query_set()
+            .filter(**kwargs)
+            .select_related('globalschemeid')
+            .annotate(scheme_total=Sum('total'))
+            .order_by('-scheme_total'))
         return schemes
