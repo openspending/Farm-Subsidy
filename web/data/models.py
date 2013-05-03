@@ -30,7 +30,7 @@ class CountryYear(models.Model):
 
 class Recipient(models.Model):
     recipientid = models.CharField(max_length=10)
-    recipientidx = models.CharField(max_length=10)
+    recipientidx = models.CharField(max_length=10, null=True)
     globalrecipientid = models.CharField(primary_key=True, max_length=10)
     globalrecipientidx = models.CharField(max_length=10)
     name = models.TextField(null=True)
