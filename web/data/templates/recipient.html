@@ -15,6 +15,12 @@
   {{ recipient.name }}{% if list_enabled %} --{% list_item_edit recipient %}--{% endif %}
 {% endblock %}
 
+{% block extrameta %}
+  {% if recipient_total >= 1000 %}
+    <meta name="robots" content="noindex"/>
+  {% endif %}
+{% endblock %}
+
 {% block breadcrumb %}
     {% for item in breadcrumbs %}
         {% for heading, content in item.items %}
