@@ -1,21 +1,20 @@
 # encoding: utf-8
-import re
-
 from django.db import models
-from django.db import connection, backend, models
-from django.db.models import Sum, Max
-
-from data import countryCodes
-
+from django.db.models import Sum
 from django.conf import settings
 
 DEFAULT_YEAR = settings.DEFAULT_YEAR
+
 
 class SchemeManager(models.Manager):
     """
     Various reusable queries, like top_schemes
     """
-    
+
+    def get_query_set(self):
+        return super(SchemeManager, self).get_query_set().filter(
+                total__isnull=False)
+
     def top_schemes(self, country=None, year=DEFAULT_YEAR, limit=10):
         """
         Top schemes for a given country over all years.
@@ -24,17 +23,20 @@ class SchemeManager(models.Manager):
         if country and country != "EU":
             kwargs['countrypayment'] = country
 
-        schemes = self.all()
-        schemes = schemes.filter(**kwargs)
-        schemes = schemes.exclude(total=None)
-        schemes = schemes.order_by('-total')
+        schemes = self.get_query_set().filter(**kwargs)\
+                .exclude(total=None).order_by('-total')
         return schemes[:limit]
+
 
 class SchemeYearManager(models.Manager):
     """
     Various reusable queries, like top_schemes
     """
-    
+
+    def get_query_set(self):
+        return super(SchemeYearManager, self).get_query_set().filter(
+                total__isnull=False)
+
     def top_schemes(self, country=None, year=DEFAULT_YEAR):
         kwargs = {}
         if int(year) != 0:
