@@ -36,7 +36,7 @@ class Recipient(models.Model):
     name = models.TextField(null=True)
     address1 = models.TextField(blank=True, null=True)
     address2 = models.TextField(blank=True, null=True)
-    zipcode = models.CharField(max_length=20, blank=True, null=True)
+    zipcode = models.CharField(max_length=100, blank=True, null=True)
     town = models.TextField(blank=True, null=True)
     countryrecipient = models.CharField(blank=True,
             max_length=2, null=True, db_index=True)
