@@ -38,6 +38,7 @@ class Command(BaseCommand):
     def delete_for_recipient(self, country):
         sql = '''BEGIN;
             DELETE FROM data_recipientyear WHERE country='%(country)s';
+            DELETE FROM data_totalyear WHERE country='%(country)s';
             COMMIT;''' % {'country': country}
         print sql
         self.cursor.execute(sql)
