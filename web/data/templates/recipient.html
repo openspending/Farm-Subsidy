@@ -86,12 +86,14 @@
         {% get_comment_list for recipient as comment_list %}
         {% if not comment_list %}
             {# no comments #}
-            <h3><span class="highlight">Nobody has looked into this recipient yet</span></h3>
+            <h3>
+              <span class="highlight">We have no additional information about this recipient</span>
+            </h3>
             <p>Currently all we know about {{recipient.name}} are the few bits of information released by the {{ country.name }} government.</p>
             <p>We need <strong>your help</strong> to find out more about this recipient. Is it a multi-national company or a small farm? What does it produce? Is it a subsidiary of a larger company? How large is it? Is it owned by anyone noteworthy?</p>
         {% else %}
             {# has comments #}
-            <h3>More information about this recipient</h3>
+            <h3>More information about this recipient by users</h3>
             <p>People have been helping us to find out more about {{recipient.name}}. You can add more information below. Here is what we know so far:</p>
             {% for comment in comment_list %}
               <div class="comment" id="comment-{{ comment.pk }}">
