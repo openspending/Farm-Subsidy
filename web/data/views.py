@@ -77,7 +77,7 @@ def country(request, country, year=DEFAULT_YEAR):
         if country != "EU":
             top_recipients = top_recipients.filter(country=country)
     else:
-        top_recipients = models.Recipient.objects.all()
+        top_recipients = models.Recipient.objects.top_recipients()
         if country != "EU":
             top_recipients = top_recipients.filter(countrypayment=country)
     top_recipients = top_recipients[:5]
@@ -260,7 +260,7 @@ def scheme(request, country, globalschemeid, name, year=0):
     # To add one day
     scheme_years = models.SchemeYear.objects.filter(globalschemeid=scheme)
 
-    top_recipients = models.RecipientSchemeYear.objects.filter(scheme=scheme, year=selected_year)
+    top_recipients = models.RecipientSchemeYear.objects.filter(scheme=scheme, year=selected_year).select_related('recipient')
 
     top_recipients = CachedCountQuerySetWrapper(top_recipients, key="data.scheme.%s.%s.%s.top_recipients" % (country, globalschemeid, year))
 
