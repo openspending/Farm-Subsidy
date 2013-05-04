@@ -183,7 +183,7 @@ class SchemeYear(models.Model):
 
     def get_absolute_url(self):
         return reverse('scheme_view', args=[self.countrypayment,
-                                            self.globalschemeid,
+                                            self.globalschemeid_id,
                                             slugify(self.nameenglish)])
 
 
