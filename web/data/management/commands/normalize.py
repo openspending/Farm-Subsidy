@@ -134,8 +134,14 @@ class Command(BaseCommand):
             BEGIN;
             INSERT INTO data_recipientschemeyear (recipient_id, scheme_id, country, year, total)
             SELECT globalrecipientid, globalschemeid, %(country)s, '0', SUM(amounteuro)
-            FROM data_payment
+            FROM data_payment WHERE countrypayment=%(country)s
             GROUP BY globalschemeid, globalrecipientid;
+            COMMIT;
+            BEGIN;
+            INSERT INTO data_recipientschemeyear (recipient_id, scheme_id, country, year, total)
+            SELECT globalrecipientid, globalschemeid, %(country)s, year, SUM(amounteuro)
+            FROM data_payment WHERE countrypayment=%(country)s
+            GROUP BY globalschemeid, globalrecipientid, year;
             COMMIT;
         """, {'country': self.country})
 
