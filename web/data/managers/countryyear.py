@@ -7,6 +7,10 @@ class CountryYearManager(models.Manager):
     Various reusable queries, like top_schemes
     """
 
+    def get_query_set(self):
+        return super(CountryYearManager, self).get_query_set().filter(
+                total__isnull=False)
+
     def year_max_min(self, country=None):
         """
         return a tuple of the highest and lowest year know about for a country
@@ -15,10 +19,8 @@ class CountryYearManager(models.Manager):
         if country and country != "EU":
             kwargs['country'] = country
 
-        years = self.all()
-        years = years.filter(**kwargs)
-        years = years.order_by('-year')
-        years = years.values('year')
+        years = self.get_query_set().filter(**kwargs)\
+                .order_by('-year').values('year')
         years = [y['year'] for y in years]
         if not years:
             # If no years, return a 'blank' list
