@@ -23,8 +23,7 @@ class SchemeManager(models.Manager):
         if country and country != "EU":
             kwargs['countrypayment'] = country
 
-        schemes = self.get_query_set().filter(**kwargs)\
-                .exclude(total=None).order_by('-total')
+        schemes = self.get_query_set().filter(**kwargs).order_by('-total')
         return schemes[:limit]
 
 

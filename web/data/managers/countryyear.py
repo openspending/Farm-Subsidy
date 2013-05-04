@@ -1,17 +1,12 @@
 # encoding: utf-8
-import re
-
 from django.db import models
-from django.db import connection, backend, models
-from django.db.models import Sum, Max
-
 
 
 class CountryYearManager(models.Manager):
     """
     Various reusable queries, like top_schemes
     """
-    
+
     def year_max_min(self, country=None):
         """
         return a tuple of the highest and lowest year know about for a country
@@ -27,7 +22,6 @@ class CountryYearManager(models.Manager):
         years = [y['year'] for y in years]
         if not years:
             # If no years, return a 'blank' list
-            years = [0,0]
-        
-        return min(years), max(years)
+            years = [0, 0]
 
+        return min(years), max(years)
