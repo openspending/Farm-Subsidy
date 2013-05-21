@@ -17,15 +17,8 @@ class Command(BaseCommand):
         self.cursor = connection.cursor()
 
     def format_file_name(self, table, country):
-        path = os.path.join(settings.ROOT_PATH, 'data', 'csv',
+        return os.path.join(settings.ROOT_PATH, 'data', 'csv',
                      country, '%s.txt' % table)
-        if path.startswith('/private'):
-            # Hack for OS X :(
-            path = "/" + "/".join(path.split('/')[2:])
-        if os.path.exists(path):
-            return path
-        else:
-            raise IOError('Data file not found at %s' % path)
 
     def delete_for_scheme(self, country):
         sql = '''BEGIN;
