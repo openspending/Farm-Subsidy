@@ -8,7 +8,8 @@ from haystack.exceptions import NotHandled
 
 class Command(BaseCommand):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__(*args, **kwargs)
         self.cursor = connection.cursor()
 
     def update_index(self, labels, batch_size=5000):
