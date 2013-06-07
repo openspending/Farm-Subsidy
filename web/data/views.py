@@ -124,7 +124,7 @@ def country(request, country, year=DEFAULT_YEAR):
         latest_news_item = news_items[0]
 
     #get country stats
-    stats_info = load_info(country)
+    stats_info = None  # load_info(country)
 
     return render_to_response(
         country_template('country.html', country),
