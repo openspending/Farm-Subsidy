@@ -25,9 +25,9 @@
             Farm subsidies in {{country.name}} have most recently been featured in the story '<a href="{{latest_news_item.url}}">{{latest_news_item.title}}</a>'.
         {% endif %}
     </p>
-{% endif %}    
+{% endif %}
 
-{% if years %}  
+{% if years %}
     <div class="year_selector section">
     Show subsidies for
     {% if selected_year == 0 %}
@@ -35,7 +35,7 @@
     {% else %}
         <a href="{% url 'country' country=country.code %}" class="selected">All Years</a>
     {% endif %}
-    
+
     {% for year in years %}
         {% if year.year == selected_year  %}
             <strong>{{ year.year }}</strong>
@@ -49,7 +49,7 @@
 
 <div class="section">
   <h3>Top recipients</h3>
-  <table>  
+  <table>
     <thead>
       <th>Recipient name</th>
       <th class="money">Amount</th>
@@ -67,7 +67,7 @@
           {% endif %}
         </tr>
       {% endfor %}
-      
+
     </tbody>
   </table>
   <p class="more_info">
@@ -75,6 +75,7 @@
   </p>
 </div>
 
+{% comment %}
 <div class="section">
   <h3>Top regions</h3>
   <table>
@@ -93,6 +94,7 @@
     <a href="{% url 'all_locations' country=country.code year=selected_year %}">View all regions &raquo;</a>
   </p>
 </div>
+{% endcomment %}
 
 
 <div class="section">
@@ -115,17 +117,17 @@
 </div>
 
 {% endblock %}
-  
+
 
 {% block right %}
     <div class="section">
         {% country_map country.code %}
     </div>
     {% if country == "EU" %}
-    
+
     <div class="section">
         <div class="section">
-          <dl class="metadata">  
+          <dl class="metadata">
             <dt>Total contribution</dt>
             <dd>{{ stats_info.total_contribution|safe }}</dd>
             <dt>Total spending</dt>
@@ -157,13 +159,13 @@
               <dt>Payments to top 10%</dt>
               <dd>{{ stats_info.proportion_of_payments_to_top_10|safe }} </dd>
               <dt>Payments to top 20%</dt>
-              <dd>{{ stats_info.proportion_of_payments_to_top_20|safe }}</dd>              
+              <dd>{{ stats_info.proportion_of_payments_to_top_20|safe }}</dd>
           </dl>
         </div>
     </div>
     {% endif %}
 
-    
+
     {% if transparency %}
         {% load transparency_index %}
         {% transparency_index country %}
@@ -173,5 +175,5 @@
   {% latestnews country.code %}
 
   {{block.super}}
-  
+
 {% endblock %}
