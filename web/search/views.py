@@ -55,6 +55,7 @@ def search(request, search_map=False):
     return render_to_response(
         t,
         {
+            'q': q,
             'total': total,
             'offset': offset,
             'form': form,
