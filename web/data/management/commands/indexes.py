@@ -24,7 +24,7 @@ class Command(BaseCommand):
             'data_payment': [
                     ('data_payment_amounteuro', 'amounteuro'),
                     ('data_payment_countrypayment', 'countrypayment'),
-                    ('data_payment_globalrecipientidx', 'globalrecipientidx'),
+                    ('data_payment_globalrecipientid', 'globalrecipientid'),
                     ('data_payment_globalschemeid', 'globalschemeid'),
                     ('data_payment_year', 'year'),
             ],

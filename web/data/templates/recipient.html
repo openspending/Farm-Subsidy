@@ -192,8 +192,10 @@
     </ul>
     {% endif %}
 
+    {% comment %}
     <div class="section">
         <a href="{% url 'csv_recipient' recipient.pk %}">Download this recipient as a CSV file, for Excel</a>
     </div>
+    {% endcomment %}
 
 {% endblock %}

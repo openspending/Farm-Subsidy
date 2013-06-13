@@ -3,7 +3,7 @@ Load the data from CSV files in to the database
 
 """
 import os
-import csv
+import unicodecsv as csv
 
 from optparse import make_option
 from django.core.management.base import BaseCommand
@@ -32,7 +32,8 @@ class Command(BaseCommand):
             # like excel, but uses semicolons
             delimiter = ";"
         csv.register_dialect("SKV", SKV)
-        f = csv.DictReader(open(path, 'U'), dialect='SKV', fieldnames=field_names)
+        f = csv.DictReader(open(path, 'U'), encoding='utf-8', dialect='SKV',
+                           fieldnames=field_names)
         return f
 
     def recipients(self):

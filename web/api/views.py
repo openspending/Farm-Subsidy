@@ -17,27 +17,27 @@ from data.models import Recipient, GeoRecipient, Payment
 #     lng, lat = map(float, (lng, lat,))
 #     limit = request.GET.get('limit', 10)
 #     offset = request.GET.get('offset', 0)
-#     
-# 
+#
+#
 #     base_qs = GeoRecipient.objects.distance(Point((lng, lat))).order_by('-distance')
-#     
+#
 #     if format == 'kml':
 #         qs = base_qs.kml()
 #     if format == 'json':
 #         qs = base_qs.json()
 #         print "json"
-#     
+#
 #     qs = qs[offset:limit]
-#     
+#
 #     djf = Django.Django(geodjango="geometry", properties=['city', 'state'])
 #     geoj = GeoJSON.GeoJSON()
 #     string = geoj.encode(djf.decode(qs))
 #     print string
-#     
-#     # return render_to_kml('kml.html', {'qs' : qs}) 
+#
+#     # return render_to_kml('kml.html', {'qs' : qs})
 
 def csv_recipient(request, recipient_id):
-    recipient = get_object_or_404(Recipient, pk=recipient_id)    
+    recipient = get_object_or_404(Recipient, pk=recipient_id)
     recipient_fields = ('globalrecipientidx',
                         'name',
                         'address1',
@@ -68,14 +68,14 @@ def csv_recipient(request, recipient_id):
         field_value = u"%s" % recipient.__dict__[field]
         field_value = field_value.encode('utf8')
         recipient_info.append(field_value)
-    
-    
+
+
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=recipient-%s.csv' % recipient.pk
 
     csv_writer = csv.writer(response)
 
-    
+
     csv_writer.writerow(recipient_fields + payment_fields)
 
     for payment in recipient.payment_set.all():
@@ -97,9 +97,9 @@ def csv_recipient(request, recipient_id):
 def documentation(request, path):
     """
     A version of direct_to_template, I guess.
-    
+
     Takes a path, and looks for a tempalte that might match it, then rendars it.
-    
+
     Simples.
     """
     if path.endswith('/') and len(path) > 1:
