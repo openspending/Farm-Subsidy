@@ -24,3 +24,15 @@ ALTER TABLE data_scheme ALTER COLUMN total SET DEFAULT 0.0;
 ALTER TABLE data_schemeyear ALTER COLUMN total SET DEFAULT 0.0;
 ALTER TABLE data_recipientschemeyear ALTER COLUMN total SET DEFAULT 0.0;
 ALTER TABLE data_totalyear ALTER COLUMN total SET DEFAULT 0.0;
+
+## Import fresh data
+
+E.g. for Austria:
+
+    python manage.py copier -c AT
+    python manage.py normalize -c AT
+
+After all countries are imported, run search indexing:
+
+    python manage.py fs_update_index
+
