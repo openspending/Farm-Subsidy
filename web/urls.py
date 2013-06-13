@@ -23,9 +23,9 @@ urlpatterns = patterns('',
     (r'lists/', include('listmaker.urls')),
     (r'^accounts/', include('registration.urls')),
 
-    (r'^api/', include('web.api.urls')),
+    # (r'^api/', include('web.api.urls')),
 
-    (r'^petition/', include('web.petition.urls')),
+    # (r'^petition/', include('web.petition.urls')),
 )
 
 if settings.DEBUG:
