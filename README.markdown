@@ -1,29 +1,18 @@
 # Farmsubsidy.org
 
-This code runs farmsubsidy.org.  Please read INSTALL if you are interested in setting it up yourself, and contact symroe (sym@ the projects domain name or @symroe on twitter) for help and information.
+This code runs farmsubsidy.openspending.org. Please read INSTALL for installation instructions.
 
-If you are interested in the project in general, please contact team@the project domain name.
-
-
-These management commands may be of interest:
-
-    python manage.py populate -c DE
-    python manage.py payment_totals
-    python manage.py transparency_index
+If you are interested in the project in general, please contact the [OpenSpending Team](http://openspending.org/about/contact.html).
 
 
-For Deployment:
-python manage.py collectstatic
+## Installation
 
-SQL to make totals default to 0.0. Execute manually (not done by migrations):
+Follow instructions in `INSTALL.txt`.
 
-ALTER TABLE data_recipient ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_countryyear ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_recipientyear ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_scheme ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_schemeyear ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_recipientschemeyear ALTER COLUMN total SET DEFAULT 0.0;
-ALTER TABLE data_totalyear ALTER COLUMN total SET DEFAULT 0.0;
+
+## Loading data
+
+These management commands load data for specific country. The data must be located in the data folder like this `data/<CountryCode>/payment.txt`. You need `payment.txt`, `recipient.txt` and `scheme.txt` files.
 
 ## Import fresh data
 
@@ -32,7 +21,13 @@ E.g. for Austria:
     python manage.py copier -c AT
     python manage.py normalize -c AT
 
+Repeat for every country.
+
 After all countries are imported, run search indexing:
 
     python manage.py fs_update_index
 
+
+After this you can update the total payments number on the front page like this:
+
+    python manage.py payment_totals
