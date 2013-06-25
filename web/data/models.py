@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
-
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.urlresolvers import reverse
 from treebeard.mp_tree import MP_Node
-from django.contrib.gis.db import models as geo_models
-from django.contrib.gis.geos import GEOSGeometry
 
 from managers.recipients import RecipientManager
 from managers.recipient_year import RecipientYearManager
@@ -109,29 +105,6 @@ class RecipientYear(models.Model):
 
     def get_absolute_url(self):
         return reverse('recipient_view', args=[self.country, self.recipient_id, slugify(self.name)])
-
-
-class GeoRecipient(geo_models.Model):
-    recipient = models.ForeignKey(Recipient, primary_key=True)
-    location = geo_models.PointField(spatial_index=True, geography=True)
-
-    objects = geo_models.GeoManager()
-
-    def __unicode__(self):
-        return self.pk
-
-    def as_dict(self):
-        m = {
-            'pk': self.recipient.pk,
-            'name': self.recipient.name,
-            'countrypayment': self.recipient.countrypayment,
-            'total': self.recipient.total,
-            'location': json.loads(GEOSGeometry(self.location).json),
-        }
-        return m
-
-    def as_json(self):
-        return json.dumps(self.as_dict())
 
 
 class Payment(models.Model):

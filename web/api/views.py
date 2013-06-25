@@ -11,7 +11,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from django.contrib.gis.shortcuts import render_to_kml
 
-from data.models import Recipient, GeoRecipient, Payment
+from data.models import Recipient, Payment
 
 # def geo(request, lng, lat, format='kml'):
 #     lng, lat = map(float, (lng, lat,))

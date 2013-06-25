@@ -189,14 +189,6 @@ def recipient(request, country, recipient_id, name):
         for scheme in payment.scheme.schemetype_set.all():
             payment_schemes.append(scheme.scheme_type)
 
-    try:
-        georecipient = models.GeoRecipient.objects.get(pk=recipient.pk)
-        closest = models.GeoRecipient.objects.filter(
-            location__dwithin=(georecipient.location, 20)
-        ).distance(georecipient.location).order_by('distance')[:5]
-    except:
-        closest = None
-
     # lists this recipient is in:
     recipient_lists = []
     # for list_obj in ListItem.objects.filter(object_id=recipient_id):
@@ -216,7 +208,6 @@ def recipient(request, country, recipient_id, name):
             'first_year': 0,
             'years_max_min': years_max_min,
             'expanded': expanded,
-            'closest': closest,
         },
         context_instance=RequestContext(request)
     )
@@ -409,36 +400,3 @@ def data_agreement_form(request):
         {'form': form},
         context_instance=RequestContext(request)
     )
-
-
-def heatmap(request):
-    return render_to_response('heatmap.html', {},
-        context_instance=RequestContext(request)
-    )
-
-
-def serve_tile(request, color_scheme, zoom, x, y):
-    # Check arguments
-    try:
-        assert color_scheme in color_schemes, "bad color_scheme: " + color_scheme
-        assert zoom.isdigit() and x.isdigit() and y.isdigit(), "not digits"
-        zoom = int(zoom)
-        x = int(x)
-        y = int(y)
-        assert 0 <= zoom <= 30, "bad zoom: %d" % zoom
-    except AssertionError:
-        return HttpResponseBadRequest()
-
-    # Get image and storage backends
-    tile = renderer.Tile(models.GeoRecipient.objects.all(), color_scheme,
-        dots, zoom, x, y, point_field='location')
-    storage_backend = StorageBackend()
-
-    # Grab the raw image data
-    if tile.is_empty():
-        bytes = storage_backend.get_emptytile_bytes(tile)
-    else:  # tile.is_stale() or ALWAYS_BUILD:
-        bytes = storage_backend.get_tile_bytes(tile, 'farm')
-
-    # Write the bytes out to the HttpResponse
-    return HttpResponse(bytes, content_type="image/png")

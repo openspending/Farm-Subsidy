@@ -1,5 +1,5 @@
 from django.contrib.gis import admin
-from models import Recipient, GeoRecipient, SchemeType
+from models import Recipient, SchemeType
 #
 # # class FeedsAdmin(admin.ModelAdmin):
 # #   list_display  = ('title','url', 'is_active', 'category',)
@@ -31,7 +31,6 @@ class RecipientAdmin(admin.ModelAdmin):
     remove_from_index.short_description = "Remove from search index"
 
 admin.site.register(Recipient, RecipientAdmin)
-admin.site.register(GeoRecipient, admin.GeoModelAdmin)
 admin.site.register(SchemeType)
 
 # # admin.site.register(FeedItems, FeedItemsAdmin)
