@@ -14,8 +14,10 @@ from django.conf import settings
 
 from feeds.models import FeedItems
 from tagging.models import TaggedItem, Tag
+from listmaker.models import ListItem
 from misc.helpers import country_template, CachedCountQuerySetWrapper, QuerySetCache
 from web.countryinfo.transparency import transparency_score
+from web.countryinfo.load_info import load_info
 from data import countryCodes
 
 import models
@@ -27,7 +29,6 @@ DEFAULT_YEAR = settings.DEFAULT_YEAR
 LATEST_YEAR = settings.LATEST_YEAR
 
 
-@cache_page(60 * 60 * 24, key_prefix="farm")
 def home(request):
     # ip_country = request.session.get('ip_country', 'GB')
     # top_for_ip = models.Recipient.objects.top_recipients(country=ip_country)
@@ -46,7 +47,6 @@ def home(request):
     }, context_instance=RequestContext(request))
 
 
-@cache_page(60 * 60 * 24, key_prefix="farm")
 def countries(request):
     countries = []
     for country in countryCodes.country_codes():
@@ -57,7 +57,6 @@ def countries(request):
         context_instance=RequestContext(request))
 
 
-@cache_page(60 * 60 * 24, key_prefix="farm")
 def country(request, country, year=DEFAULT_YEAR):
     """
     Provides all the variables for the country pages at, for example "/AT/"
@@ -213,7 +212,6 @@ def recipient(request, country, recipient_id, name):
     )
 
 
-@cache_page(60 * 60 * 24, key_prefix="farm")
 def all_schemes(request, country='EU'):
     """
     Scheme browser (replaces generic 'browse' function for schemes)
