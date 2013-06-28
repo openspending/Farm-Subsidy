@@ -16,7 +16,7 @@ from models import Recipient, SchemeType
 
 
 class RecipientAdmin(admin.ModelAdmin):
-    search_fields = ['globalrecipientid']
+    search_fields = ['=globalrecipientid']
     actions = ['remove_from_index']
 
     def remove_from_index(self, request, queryset):
