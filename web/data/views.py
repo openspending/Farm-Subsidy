@@ -253,9 +253,11 @@ def scheme(request, country, globalschemeid, name, year=0):
     # To add one day
     scheme_years = models.SchemeYear.objects.filter(globalschemeid=scheme)
 
-    top_recipients = models.RecipientSchemeYear.objects.filter(scheme=scheme, year=selected_year).select_related('recipient')
+    # FIXME: find indexes to make this work
+    top_recipients = []
+    # top_recipients = models.RecipientSchemeYear.objects.filter(scheme=scheme, year=selected_year).select_related('recipient')
 
-    top_recipients = CachedCountQuerySetWrapper(top_recipients, key="data.scheme.%s.%s.%s.top_recipients" % (country, globalschemeid, year))
+    # top_recipients = CachedCountQuerySetWrapper(top_recipients, key="data.scheme.%s.%s.%s.top_recipients" % (country, globalschemeid, year))
 
     return render_to_response(
         country_template('scheme.html', country),
