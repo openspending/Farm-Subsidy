@@ -35,6 +35,8 @@
     {% load pagination_tags %}
     {% autopaginate top_recipients 30 %}
     <h3>All Recipients</h3>
+    <p>This page is currently disabled.</p>
+    {% comment %}
     <table>
         <thead>
             <th>Name</th>
@@ -50,7 +52,7 @@
         </tbody>
     </table>
     <h4 class="pager">{% paginate %}</h4>
-
+    {% endcomment %}
 
 {% endblock %}
 
