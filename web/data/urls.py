@@ -46,8 +46,4 @@ urlpatterns = patterns('data.views',
     url(r'^getthedata/download/(?P<data_file>\d+)$', 'download', name='download_file'),
     url(r'^getthedata/data_agreement$', 'data_agreement_form', name='data_agreement_form'),
 
-
-    url(r'^heatmap$', 'heatmap', name='heatmap'),
-    url(r'^tiles/(?P<color_scheme>\w+)/(?P<zoom>\d+)/(?P<x>\d+),(?P<y>\d+).png$',
-        'serve_tile', name='serve_tile',),
 )
