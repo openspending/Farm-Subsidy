@@ -276,7 +276,7 @@ def browse(request, country):
 
     from misc.fast_pager import Paginator
 
-    recipients = models.Recipient.objects.order_by('-total')
+    recipients = models.Recipient.objects.order_by('-total').filter(total__isnull=False)
 
     if country != "EU":
         recipients = recipients.filter(countrypayment=country)
