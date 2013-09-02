@@ -23,6 +23,8 @@ E.g. for Austria:
 
 Repeat for every country.
 
+Run a `VACUUM VERBOSE ANALYZE` on all database tables afterwards.
+
 After all countries are imported, run search indexing:
 
     python manage.py fs_update_index
