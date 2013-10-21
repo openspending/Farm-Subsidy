@@ -1,9 +1,12 @@
 {% load strip_accents %}
 {% filter lower|strip_accents %}
-    {{ object.name }}
-    {{ object.geo1 }}
-    {{ object.geo2 }}
-    {{ object.geo3 }}
-    {{ object.geo4 }}
-    {{ object.zipcode }}
+{% if object.name %}{{ object.name }}{% endif %}
+{% if object.address1 %}{{ object.address1 }}{% endif %}
+{% if object.address2 %}{{ object.address2 }}{% endif %}
+{% if object.zipcode %}{{ object.zipcode }}{% endif %}
+{% if object.town %}{{ object.town }}{% endif %}
+{% if object.geo1 %}{{ object.geo1 }}{% endif %}
+{% if object.geo2 %}{{ object.geo2 }}{% endif %}
+{% if object.geo3 %}{{ object.geo3 }}{% endif %}
+{% if object.geo4 %}{{ object.geo4 }}{% endif %}
 {% endfilter %}
