@@ -1,33 +1,43 @@
+from optparse import make_option
+
 from django.core.management.base import BaseCommand
 from django.db.models import get_model
-from django.db import reset_queries, connection
+from django.db import reset_queries
 
 from haystack import connections as haystack_connections
 from haystack.exceptions import NotHandled
 
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--country', '-c', dest='country',
+            help='ISO country name'),
+        make_option('--barch_size', '-b', dest='batch_size',
+            type='int', default=1000, help='Batch Size')
+    )
+    help = 'Load data into search index'
 
-    def __init__(self, *args, **kwargs):
-        super(Command, self).__init__(*args, **kwargs)
-        self.cursor = connection.cursor()
-
-    def update_index(self, labels, batch_size=5000):
+    def update_indexes(self, labels, **kwargs):
         for label in labels:
             model = get_model(*label)
-            for using in haystack_connections.connections_info.keys():
-                backend = haystack_connections[using].get_backend()
-                unified_index = haystack_connections[using].get_unified_index()
-                try:
-                    index = unified_index.get_index(model)
-                except NotHandled:
-                    if self.verbosity >= 2:
-                        print "Skipping '%s' - no index." % model
-                    continue
-                print "Indexing %s" % model
-                all_qs = model.objects.order_by(model._meta.pk.name)
-                for qs in self.get_query_sets(all_qs, batch_size=batch_size):
-                    backend.update(index, qs)
+            self.update_index(model, **kwargs)
+
+    def update_index(self, model, batch_size=1000, country=None, **kwargs):
+        for using in haystack_connections.connections_info.keys():
+            backend = haystack_connections[using].get_backend()
+            unified_index = haystack_connections[using].get_unified_index()
+            try:
+                index = unified_index.get_index(model)
+            except NotHandled:
+                if self.verbosity >= 2:
+                    print "Skipping '%s' - no index." % model
+                continue
+            print "Indexing %s" % model
+            all_qs = model.objects.order_by(model._meta.pk.name)
+            if country is not None:
+                all_qs = all_qs.filter(countrypayment=country)
+            for qs in self.get_query_sets(all_qs, batch_size=batch_size):
+                backend.update(index, qs)
 
     def get_query_sets(self, qs, batch_size):
         """
@@ -50,8 +60,6 @@ class Command(BaseCommand):
             reset_queries()
 
     def handle(self, **options):
-        self.update_index([s.split('.') for s in
-            ('data.Recipient',
-            'data.Location',
-            'features.Feature')
-        ])
+        self.update_indexes([s.split('.') for s in
+            ('data.Recipient',)
+        ], **options)
