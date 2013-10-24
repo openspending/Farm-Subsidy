@@ -24,7 +24,10 @@ def search(request, search_map=False):
         form = forms.SearchForm(initial={'q': q})
 
         auto_q = AutoQuery(q)
-        sqs = SearchQuerySet().models(Recipient).filter(content=auto_q).load_all()
+        sqs = SearchQuerySet().models(Recipient).facet('country').filter(content=auto_q)
+        if request.GET.get('country', None) is not None:
+            sqs = sqs.filter(country=request.GET['country'])
+        sqs = sqs.load_all()
 
         total = 0
         offset = 0
