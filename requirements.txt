@@ -1,4 +1,4 @@
-Django==1.5.1
+Django==1.5.4
 Markdown==2.3.1
 South==0.7.6
 coverage==3.6
