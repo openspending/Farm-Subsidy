@@ -1,7 +1,7 @@
 import mimetypes
 # from gheat import dots, renderer, StorageBackend, color_schemes
 
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.cache import cache_page
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -14,10 +14,8 @@ from django.conf import settings
 
 from feeds.models import FeedItems
 from tagging.models import TaggedItem, Tag
-from listmaker.models import ListItem
 from misc.helpers import country_template, CachedCountQuerySetWrapper, QuerySetCache
 from web.countryinfo.transparency import transparency_score
-from web.countryinfo.load_info import load_info
 from data import countryCodes
 
 import models
