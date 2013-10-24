@@ -5,9 +5,7 @@ from django.shortcuts import render_to_response
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery
 
-from data.models import Location, Recipient
-from features.models import Feature
-from listmaker.models import List
+from data.models import Recipient
 
 import forms
 
@@ -36,17 +34,6 @@ def search(request, search_map=False):
             if t.object.total:
                 total += t.object.total
         len(sqs)
-
-        # Lists search:
-        list_search = SearchQuerySet().models(
-            List).filter(content=auto_q).load_all().highlight()
-
-        # Location search:
-        location_search = SearchQuerySet().models(Location).filter(content=auto_q)[:5]
-
-        # Features search:
-        feature_search = SearchQuerySet().models(Feature).filter(
-            content=auto_q).filter(published=True).load_all().highlight()[:3]
 
     if search_map:
         t = 'map.html'

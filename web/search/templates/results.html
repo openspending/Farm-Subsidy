@@ -30,47 +30,6 @@
 
     </form>
 
-    {% if feature_search %}
-        <div class="section">
-            <h3>Matching News items and Reports</h3>
-            {% for feature in feature_search %}
-                <h3><a href="{{ feature.object.get_absolute_url }}">{{ feature.object.title }}</a></h3>
-                {% highlight feature.text with q %}
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {% if list_enabled and list_search %}
-    <div class="section">
-        <h3>Lists</h3>
-        <ul>
-            {% for list in list_search %}
-                <li>
-                    <h3><a href="{{ list.object.get_absolute_url }}">{{ list.name }}</a></h3>
-                    {{ list.object.description|markdown|striptags|truncatewords:30 }}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    {% if location_search %}
-    <div class="section">
-        <h3>Locations</h3>
-        <ul>
-            {% for location in location_search %}
-                <li>
-                    <a href="{% url 'country' location.object.country %}">{% code_to_name location.object.country %}</a> &raquo;
-                    {{ location.object.get_ancestors|join:" &raquo; " }} &raquo;
-                    <a href="{{ location.object.get_absolute_url }}">
-                        {{ location.object.name }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
     {% if sqs %}
     <div class="section">
 
@@ -103,7 +62,7 @@
     {% endif %}
 
 
-    {% if not results and not location_search and not feature_search and not list_search  and q %}
+    {% if not results and q %}
         Sorry, no results found.
     {% endif %}
 
