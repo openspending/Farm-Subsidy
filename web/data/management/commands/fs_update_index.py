@@ -60,8 +60,8 @@ class Command(BaseCommand):
             objs = list(small_qs)
             yield objs
             last_pk = objs[-1].pk
-            print "  indexed %s - %d of %d." % (
-                    last_pk, start + batch_size, total)
+            self.stdout.write("  indexed %s - %d of %d.\r" % (
+                    last_pk, start + batch_size, total))
             reset_queries()
 
     def handle(self, **options):
