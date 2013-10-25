@@ -12,3 +12,6 @@ class RecipientIndex(indexes.SearchIndex, indexes.Indexable):
 
     def get_model(self):
         return Recipient
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.exclude(total=None)
