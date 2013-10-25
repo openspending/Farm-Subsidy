@@ -27,15 +27,14 @@ def search(request, search_map=False):
         sqs = SearchQuerySet().models(Recipient).facet('country').filter(content=auto_q)
         if request.GET.get('country', None) is not None:
             sqs = sqs.filter(country=request.GET['country'])
-        sqs = sqs.load_all()
 
         total = 0
         offset = 0
         if request.GET.get('page'):
             offset = 20 * (int(request.GET.get('page')) - 1)
         for t in sqs[offset:offset + 20]:
-            if t.object.total:
-                total += t.object.total
+            if t.total:
+                total += t.total
         len(sqs)
 
     if search_map:

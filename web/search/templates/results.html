@@ -48,10 +48,10 @@
 
           {% for result in results %}
           <tr class="{% cycle 'odd' 'even' %}">
-            <td><a href="{{ result.object.get_absolute_url }}">{{ result.object.name }}</a></td>
+            <td><a href="{{ result.url }}">{{ result.name }}</a></td>
             <td>&euro;
-              {% if result.object.total %}
-              {{ result.object.total|floatformat:2|intcomma }}
+              {% if result.total %}
+              {{ result.total|floatformat:2|intcomma }}
               {% else %}0.0{% endif %}
             </td>
             {% if list_enabled %}
