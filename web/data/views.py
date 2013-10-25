@@ -244,7 +244,7 @@ def scheme(request, country, globalschemeid, name, year=0):
 
     selected_year = int(year)
 
-    scheme = models.Scheme.objects.get(globalschemeid=globalschemeid)
+    scheme = get_object_or_404(models.Scheme, globalschemeid=globalschemeid)
 
     # To add one day
     scheme_years = models.SchemeYear.objects.filter(globalschemeid=scheme)
