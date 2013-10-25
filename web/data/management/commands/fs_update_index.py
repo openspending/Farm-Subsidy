@@ -13,7 +13,9 @@ class Command(BaseCommand):
         make_option('--country', '-c', dest='country',
             help='ISO country name'),
         make_option('--barch_size', '-b', dest='batch_size',
-            type='int', default=1000, help='Batch Size')
+            type='int', default=1000, help='Batch Size'),
+        make_option('--offset', '-o', dest='offset',
+            default='', help='Offset Index to start from')
     )
     help = 'Load data into search index'
 
@@ -22,7 +24,8 @@ class Command(BaseCommand):
             model = get_model(*label)
             self.update_index(model, **kwargs)
 
-    def update_index(self, model, batch_size=1000, country=None, **kwargs):
+    def update_index(self, model, batch_size=1000, country=None,
+                     offset='', **kwargs):
         for using in haystack_connections.connections_info.keys():
             backend = haystack_connections[using].get_backend()
             unified_index = haystack_connections[using].get_unified_index()
@@ -36,20 +39,22 @@ class Command(BaseCommand):
             all_qs = model.objects.order_by(model._meta.pk.name)
             if country is not None:
                 all_qs = all_qs.filter(countrypayment=country)
-            for qs in self.get_query_sets(all_qs, batch_size=batch_size):
+            for qs in self.get_query_sets(all_qs, batch_size=batch_size, last_pk=offset):
                 backend.update(index, qs)
 
-    def get_query_sets(self, qs, batch_size):
+    def get_query_sets(self, qs, batch_size, last_pk=None):
         """
         Instead of getting chunks by offset which is
         inefficient, we get them by ordering and pk > last_pk
         and limiting.
         """
-        total = qs.count()
-        last_pk = None
+        if last_pk:
+            total = qs.filter(pk__gt=last_pk).count()
+        else:
+            total = qs.count()
         for start in range(0, total, batch_size):
             small_qs = qs.all()
-            if last_pk is not None:
+            if last_pk:
                 small_qs = small_qs.filter(pk__gt=last_pk)
             small_qs = small_qs[:batch_size]
             objs = list(small_qs)
