@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block extrameta %}
-  {% if recipient_total >= 1000 %}
+  {% if recipient_total < 1000 %}
     <meta name="robots" content="noindex"/>
   {% endif %}
 {% endblock %}
