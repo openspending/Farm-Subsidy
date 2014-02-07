@@ -100,7 +100,6 @@ INSTALLED_APPS = [
     'haystack',
     'listmaker',
     'features',
-    'django.contrib.gis',
     'typogrify',
     'piston',
     'indexer',
@@ -152,13 +151,10 @@ STATS_DIR = ROOT_PATH + '/data/stats'
 
 CACHE_BACKEND = 'redis_cache.cache://localhost:6379'
 CACHE_MIDDLEWARE_KEY_PREFIX = 'farm'
-JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_farm_stage_tmp'
-JOHNNY_MIDDLEWARE_SECONDS = 500
 
 
 PISTON_DISPLAY_ERRORS = False
 
-TEST_RUNNER='django.contrib.gis.tests.run_tests'
 POSTGIS_TEMPLATE='template_postgis'
 
 

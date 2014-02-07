@@ -1,17 +1,11 @@
 import csv
-import StringIO
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template import RequestContext
-from django.template import Context, Template
-from django.template.loader import render_to_string, select_template
-from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.encoding import smart_unicode
-from django.contrib.gis.geos import Point
-from django.contrib.gis.measure import Distance
-from django.contrib.gis.shortcuts import render_to_kml
+from django.template.loader import select_template
+from django.shortcuts import get_object_or_404
 
-from data.models import Recipient, Payment
+from data.models import Recipient
 
 # def geo(request, lng, lat, format='kml'):
 #     lng, lat = map(float, (lng, lat,))
@@ -35,6 +29,7 @@ from data.models import Recipient, Payment
 #     print string
 #
 #     # return render_to_kml('kml.html', {'qs' : qs})
+
 
 def csv_recipient(request, recipient_id):
     recipient = get_object_or_404(Recipient, pk=recipient_id)
@@ -63,18 +58,16 @@ def csv_recipient(request, recipient_id):
                       )
 
     recipient_info = []
-    from django.utils.encoding import smart_unicode, smart_str
+
     for field in recipient_fields:
         field_value = u"%s" % recipient.__dict__[field]
         field_value = field_value.encode('utf8')
         recipient_info.append(field_value)
 
-
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=recipient-%s.csv' % recipient.pk
 
     csv_writer = csv.writer(response)
-
 
     csv_writer.writerow(recipient_fields + payment_fields)
 
@@ -91,7 +84,6 @@ def csv_recipient(request, recipient_id):
         csv_writer.writerow(csv_data)
 
     return response
-
 
 
 def documentation(request, path):
