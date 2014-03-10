@@ -18,10 +18,9 @@ Overview
 * The ``Website`` section is 
   describing the structure of the website and the corresponding source code
   on `GitHub <https://github.com/openspending/Farm-Subsidy>`_. 
-* Scrapers for the data are hosted in a separate 
+* In the ``Scraper`` section people who want to help out can find information on how to write scapers for the 
+  different countries. Scrapers for the data are hosted in a separate
   `GitHub repository <https://github.com/openspending/farmsubsidy-scrapers>`_.
-  People who want to help out writing scrapers for the different countries
-  can find information in the ``Scraper`` section of these docs.
 
 .. note::
    Current work in progress, for remarks or questions
