@@ -4,6 +4,10 @@ This code runs farmsubsidy.openspending.org. Please read INSTALL for installatio
 
 If you are interested in the project in general, please contact the [OpenSpending Team](http://openspending.org/about/contact.html).
 
+## Developer Documentation
+
+More extensive developer documentation is just being build up at http://farmsubsidy.readthedocs.org.
+
 
 ## Installation
 
