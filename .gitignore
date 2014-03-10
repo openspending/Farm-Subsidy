@@ -6,4 +6,8 @@ include/
 lib/
 pip-log.txt
 .Python
+.project
+.pydevproject
+.settings
 bin/
+docs/_build
