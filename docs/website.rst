@@ -2,29 +2,110 @@
 Website
 =======
 
+This is the developer documentation for the **Farmsubsidy website**, located under the following url:
+
+* http://farmsubsidy.openspending.org
+
+**Sources** for the website can be found on **GitHub**:
+
+* https://github.com/openspending/Farm-Subsidy/
+
+The website is build with ``Python`` using ``Django`` as a web framework.
+
 Installation
 ============
 
 Requirements
 ------------
 
-TODO
+The following list contains only the most central requirements to get an overview
+which software components are used. For a complete overview have a look at the
+`requirements.txt <https://github.com/openspending/Farm-Subsidy/blob/master/requirements.txt>`_ file on GitHub.
+
+* `Django <https://www.djangoproject.com/>`_ 1.5.x
+* `Haystack <http://haystacksearch.org/>`_ 2.0.x for search (`GitHub Fork <https://github.com/stefanw/django-haystack/tree/farmsubsidy-deploy>`_ with modifications)
+* `django-registration <https://bitbucket.org/ubernostrum/django-registration/>`_ for user login
+
+The website uses ``South`` for DB migrations/changes:
+
+* `South <http://south.aeracode.org/>`_
+
 
 Installation process
 --------------------
 
-1) Git clone the project:
+1) Get a copy of the project
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
 
-2) Set up a virtualenv and install pip::
+Git clone the project::
 
-	virtualenv --no-site-packages .
-	source bin/activate
+	git clone git@github.com:openspending/Farm-Subsidy.git #or use https
+
+2) Install requirements
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Set up ``virtualenv`` and ``pip`` and install the requirements::
+
+	virtualenv venv
+	source venv/bin/activate
 	pip install -r requirements.txt
 
-3) Set up Django::
+
+3) Configure Django
+^^^^^^^^^^^^^^^^^^^
+
+The Django project is located in the ``web`` folder.
+
+The Django ``settings.py`` file is split into two separate files. ``global_settings.py`` contains
+settings which shouldn't change in a deployment, ``settings.py.template`` contains settings which
+should be adopted in a new deployment.
+   
+Create a copy ``settings.py`` from ``settings.py.template`` and adopt the settings to your needs (for a test
+deployment maybe use ``SQLite`` instead of ``PostgreSQL`` e.g., though this depends if you want to play
+with larger amounts of data).
+
+4) Sync/migrate the DB
+^^^^^^^^^^^^^^^^^^^^^^
+
+Since there is an old ``GeoDjango`` dependency in the ``South`` migrations, early migrations won`t work
+without hassle, so sync all apps with ``syncdb``::
 
 	cd web
-	python manage.py syncdb --migrate
+	python manage.py syncdb --all
+	
+For getting ``South`` back to work again, first list all apps which uses migrations::
+	
+	python manage.py migrate --list
+	
+Then do fake migrations to the latest migration for all apps, e.g.::
+	
+	python manage.py migrate data LATESTMIGRATIONNUMBER --fake
+
+5) Install Haystack backend
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you use ``Whoosh`` as a backend for Haystack, you have to install it (older version due to dependencies)::
+
+	pip install whoosh==2.4
+
+6) Temporary: create payment_totals.txt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is due to some legacy code and will be removed as soon as possible:
+
+Create a textfile ``data/stats/payment_totals.txt`` (from repository root, not from ``web`` directory)
+and enter some fake numbers like this::
+
+	1000000,100000
+
+7) Run the server
+^^^^^^^^^^^^^^^^^
+
+Run the development server with::
+
+	python manage.py runserver
+
+You should be able to see the farm subsidy website under the URL provided and enter the admin area.
 
 Post-installation hacks
 -----------------------

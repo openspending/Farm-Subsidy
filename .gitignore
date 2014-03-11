@@ -1,10 +1,12 @@
 web/settings.py
+data/stats/payment_totals.txt
 *.pyc
 *.swp
 *~
 include/
 lib/
 pip-log.txt
+*.sqlite3
 .Python
 .project
 .pydevproject
