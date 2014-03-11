@@ -132,26 +132,32 @@ Like all Django projects the Farmsubsidy website is organized in different Djang
 Here is a list of the existing apps with a short description. Don't take the *Importance*
 column too serious, it is just for rough orientation:
 
-=========== ===================================================== =============== ============== ==========
-App         Description                                           URL paths       Status         Importance
-=========== ===================================================== =============== ============== ==========
-api         API for farmsubsidy together with ``django-piston``,  /api/           disabled       \+
-            output format and API docs in ``templates`` folder
+=========== ================================= =============== ============== ==========
+App         Description                       URL paths       Status         Importance
+=========== ================================= =============== ============== ==========
+api         API for farmsubsidy together with /api/           disabled       \+
+            ``django-piston``, output format 
+            and API docs in ``templates``
+            folder
 comments    
-countryinfo App for the transparency index                        /transparency/  active         ++
-data        **Central app** providing the main data structure     /               active         +++
-            and entry points into the website                     /ES/*
-            (country code in URL paths is exemplary)              /ES/scheme/*
-                                                                  /ES/recipient/*
-                                                                  /ES/browse/*
-features    News and reports app                                  /news/*         active         \+
+countryinfo App for the transparency index    /transparency/  active         ++
+data        **Central app** providing the     /               active         +++
+            main data structure and entry     /ES/*
+            points into the website           /ES/scheme/*             
+            (country code in URL paths        /ES/recipient/*      
+            is exemplary)                     /ES/browse/*
+                                                                  
+                                                                  
+features    News and reports app              /news/*         active         \+
 feeds
-frontend    Annotation management for logged in users             /myaccount/*    active         \+
-graphs      Graph visualisation for the data                      /graph/*        inactive       o
-listmaker   Experimental feature to put together recipient lists  /lists/*        not accessible \+
-petition    Specialized petition app, ignore                      /petition/*     inactive       o
-search      Haystack search                                       /search/*       active         ++
-=========== ===================================================== =============== ============== ==========
+frontend    Annotation management for         /myaccount/*    active         \+
+            logged in users
+graphs      Graph visualisation for the data  /graph/*        inactive       o
+listmaker   Experimental feature to put       /lists/*        not accessible \+
+            together recipient lists
+petition    Specialized petition app, ignore  /petition/*     inactive       o
+search      Haystack search                   /search/*       active         ++
+=========== ================================= =============== ============== ==========
 
 Other folders:
 
