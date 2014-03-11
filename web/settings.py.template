@@ -27,8 +27,12 @@ GOOGLE_MAPS_API_KEY = ""
 
 
 # 'Lite' settings, for non-xapian search
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = ROOT_PATH + '/whoosh'
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(ROOT_PATH, 'whoosh'),
+    },
+}
 
 # Use this to add local apps for testing or debugging.  Any apps required for 
 # the site to work *must* be placed in global_setting.py
