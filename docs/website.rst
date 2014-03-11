@@ -25,6 +25,7 @@ which software components are used. For a complete overview have a look at the
 * `Django <https://www.djangoproject.com/>`_ 1.5.x
 * `Haystack <http://haystacksearch.org/>`_ 2.0.x for search (`GitHub Fork <https://github.com/stefanw/django-haystack/tree/farmsubsidy-deploy>`_ with modifications)
 * `django-registration <https://bitbucket.org/ubernostrum/django-registration/>`_ for user login
+* `django-piston <https://bitbucket.org/jespern/django-piston/wiki/Home>`_ for the API
 
 The website uses ``South`` for DB migrations/changes:
 
@@ -121,6 +122,49 @@ Execute the following SQL manually in case your columns don't fit (it can't be m
 	ALTER TABLE data_totalyear ALTER COLUMN total SET DEFAULT 0.0;
 
 It's needed to make ``total`` columns default to ``0.0``.
+
+Source Overview
+===============
+
+Apps
+----
+Like all Django projects the Farmsubsidy website is organized in different Django apps.
+Here is a list of the existing apps with a short description. Don't take the *Importance*
+column too serious, it is just for rough orientation:
+
+=========== ===================================================== =============== ============== ==========
+App         Description                                           URL paths       Status         Importance
+=========== ===================================================== =============== ============== ==========
+api         API for farmsubsidy together with ``django-piston``,  /api/           disabled       \+
+            output format and API docs in ``templates`` folder
+comments    
+countryinfo App for the transparency index                        /transparency/  active         ++
+data        **Central app** providing the main data structure     /               active         +++
+            and entry points into the website                     /ES/*
+            (country code in URL paths is exemplary)              /ES/scheme/*
+                                                                  /ES/recipient/*
+                                                                  /ES/browse/*
+features    News and reports app                                  /news/*         active         \+
+feeds
+frontend    Annotation management for logged in users             /myaccount/*    active         \+
+graphs      Graph visualisation for the data                      /graph/*        inactive       o
+listmaker   Experimental feature to put together recipient lists  /lists/*        not accessible \+
+petition    Specialized petition app, ignore                      /petition/*     inactive       o
+search      Haystack search                                       /search/*       active         ++
+=========== ===================================================== =============== ============== ==========
+
+Other folders:
+
+=========== =====================================================
+Folder      Description
+=========== =====================================================
+locale      Minimal french localization file, ignore
+media       CSS, images and Javascript 
+misc        Small helper classes and functions
+templates   Central folder for all templates
+=========== =====================================================
+
+
 
 Data Model
 ==========
