@@ -135,27 +135,16 @@ column too serious, it is just for rough orientation:
 =========== ================================= =============== ============== ==========
 App         Description                       URL paths       Status         Importance
 =========== ================================= =============== ============== ==========
-api         API for farmsubsidy together with /api/           disabled       \+
-            ``django-piston``, output format 
-            and API docs in ``templates``
-            folder
+api         API for farmsubsidy               /api/           inactive       \+
 comments    
-countryinfo App for the transparency index    /transparency/  active         ++
-data        **Central app** providing the     /               active         +++
-            main data structure and entry     /ES/*
-            points into the website           /ES/scheme/*             
-            (country code in URL paths        /ES/recipient/*      
-            is exemplary)                     /ES/browse/*
-                                                                  
-                                                                  
+countryinfo App for transparency index        /transparency/  active         ++
+data        **Central app, data structure**   /, /ES/*        active         +++                                                
 features    News and reports app              /news/*         active         \+
 feeds
-frontend    Annotation management for         /myaccount/*    active         \+
-            logged in users
-graphs      Graph visualisation for the data  /graph/*        inactive       o
-listmaker   Experimental feature to put       /lists/*        not accessible \+
-            together recipient lists
-petition    Specialized petition app, ignore  /petition/*     inactive       o
+frontend    Annotation management for users   /myaccount/*    active         \+
+graphs      Graph visualisation               /graph/*        inactive       o
+listmaker   Experimental, recipient lists     /lists/*        inactive       \+
+petition    Special petition app, ignore      /petition/*     inactive       o
 search      Haystack search                   /search/*       active         ++
 =========== ================================= =============== ============== ==========
 
