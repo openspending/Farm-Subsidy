@@ -61,11 +61,28 @@ The Django ``settings.py`` file is split into two separate files. ``global_setti
 settings which shouldn't change in a deployment, ``settings.py.template`` contains settings which
 should be adopted in a new deployment.
    
-Create a copy ``settings.py`` from ``settings.py.template`` and adopt the settings to your needs (for a test
-deployment maybe use ``SQLite`` instead of ``PostgreSQL`` e.g., though this depends if you want to play
-with larger amounts of data).
+Create a copy ``settings.py`` from ``settings.py.template`` and adopt the settings to your needs.
 
-4) Sync/migrate the DB
+4) Install PostgreSQL
+^^^^^^^^^^^^^^^^^^^^^
+
+Farmsubsidy code uses some ``SQL`` syntax which is not compatible with ``SQLite`` and the website
+is intended to handle/present large amounts of data, so you have to start directly with a native
+DB and ommit a test installation with ``SQLite``. Since Farmsubsidy is build and tested with ``PostgreSQL``,
+a ``PostgreSQL`` installation is recommended.
+
+If you haven't that much experience with installing databases: it's not as painful as you might
+think, for the mac e.g. there is a client which can be installed and is up and running with one click:
+http://postgresapp.com/
+
+Open ``psql`` and create a new DB with::
+
+	CREATE DATABASE farm_geo; 
+
+If you are just running a test installation on localhost not using a username and passwort (don't do that
+in production) this should already do the trick!
+
+5) Sync/migrate the DB
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Since there is an old ``GeoDjango`` dependency in the ``South`` migrations, early migrations won`t work
@@ -82,14 +99,14 @@ Then do fake migrations to the latest migration for all apps, e.g.::
 	
 	python manage.py migrate data LATESTMIGRATIONNUMBER --fake
 
-5) Install Haystack backend
+6) Install Haystack backend
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you use ``Whoosh`` as a backend for Haystack, you have to install it (older version due to dependencies)::
 
 	pip install whoosh==2.4
 
-6) Temporary: create payment_totals.txt
+7) Temporary: create payment_totals.txt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This is due to some legacy code and will be removed as soon as possible:
@@ -99,7 +116,7 @@ and enter some fake numbers like this::
 
 	1000000,100000
 
-7) Run the server
+8) Run the server
 ^^^^^^^^^^^^^^^^^
 
 Run the development server with::
@@ -161,40 +178,70 @@ templates   Central folder for all templates
 
 
 
-Data Model
-==========
+Loading Data
+============
 
-Structure
----------
+Data model
+----------
 
 TODO
 
-Loading data
-------------
-
-These management commands load data for specific country. The data must be located in the data folder 
-like this ``data/<CountryCode>/payment.txt``. You need ``payment.txt``, ``recipient.txt`` and ``scheme.txt`` files.
-
-Import fresh data
+Download the data
 -----------------
 
-E.g. for Austria::
+Data for Farmsubsidy in ``CSV`` format can be found here:
 
-    python manage.py copier -c AT
-    python manage.py normalize -c AT
+* http://data.farmsubsidy.org
 
-Repeat for every country.
+This is not necessarily the newest data available but should do it for test purposes.
+Data for a single country is provided in a packaged format, e.g.:
 
-Run a ``VACUUM VERBOSE ANALYZE`` on all database tables afterwards.
+* http://data.farmsubsidy.org/AT.tar.bz2
 
-After all countries are imported, run search indexing::
+Put the data in the data folder in the following format::
+
+	data/csv/<CountryCode>/payment.txt
+
+You need the following files there:
+
+* ``payment.txt``
+* ``recipient.txt``
+* ``scheme.txt``
+
+Import the data
+---------------
+
+Now you can import the data with custom Django management commands, e.g. for Austria::
+
+    python manage.py copier -c AT #takes some time...
+    python manage.py normalize -c AT #takes even longer...
+
+Repeat that for every country or test with data for just one country.
+
+Run a ``VACUUM VERBOSE ANALYZE`` on all database tables afterwards (make sure you are
+connected to the correct database before, on ``psql``: ``\c farm_geo``).
+
+Now you should be able to browse the imported data on the local website and see the list
+of ``recipients`` in the Django admin area.
+
+Update the search index
+-----------------------
+
+When all/some countries are imported, run search indexing::
 
     python manage.py fs_update_index
+    
+    #yes, you guessed it, don't drink too much coffee :-)...
+    #For this step you can definitely go away and do something else.
 
+Now you should be able to use the search box on the website and get some results.
+
+Update total payments number
+----------------------------
 
 After this you can update the total payments number on the front page like this::
 
-    python manage.py payment_totals
+    python manage.py payment_totals #This is quick. Whew. :-)
 
 Testing
 =======

@@ -1,5 +1,6 @@
 web/settings.py
 data/stats/payment_totals.txt
+data/csv
 *.pyc
 *.swp
 *~
@@ -7,6 +8,7 @@ include/
 lib/
 pip-log.txt
 *.sqlite3
+.DS_Store
 .Python
 .project
 .pydevproject
