@@ -37,9 +37,10 @@ Here are some examples:
 
 You can find the relevant data source on the issue page of a country in the GitHub repo.
 
+.. _existing_data_format:
 
-Existing Data Format
-====================
+Format of the existing data files
+=================================
 
 To get an idea of how data is structured in the DB have a look at the :ref:`data_model` chapter in the Website
 documentation section. 
@@ -88,6 +89,9 @@ Start of a payment.txt file::
 Scraper Data Format
 ===================
 
+CSV Format
+----------
+
 The new GitHub scrapers will be used to scrape farmsubsidy data for the year ``2013`` and newer and only
 have to output a ``payment`` file with a reduced data format and no ``recipient`` and ``scheme`` files.
 Please write your scraper so that it will take the ``year`` as an input parameter and writes files like this::
@@ -98,29 +102,57 @@ The reduced data format looks like the following::
 
 	"rName";"rAddress1";"rAddress2";"rZipcode";"rTown";"globalSchemeId";"amountEuro";
 	"Nordmilch AG";;;;;"D1";15239.34;
-	"Emsland-Stärke GmbH";;;;;"D2";32305.45;
+	"Emsland-Stärke GmbH";Am Bahnhof 4B;;15938;Golßen;"D2";32305.45;
 	...
 
 The scraped data will be loaded into the database with a (yet to be written) Django management command.
 Recipient names will be matched against existing recipient names.
 
-The following paragraphs describe the single attribute formats.
+The following table describe the single attribute formats.
 
-recipientName
-^^^^^^^^^^^^^
+============== ===================================== ========= =========
+Attribute      Description                           Mandatory Data Type
+============== ===================================== ========= =========
+rName          Name of recipient                     YES       String
+rAdress1       Adress field 1 for recipient (Street) NO        String
+rAdress2       Adress field 2 for recipient (other)  NO        String
+rZipcode       Zipcode of recipient town             NO        String
+rTown          Town of recipient                     NO        String
+globalSchemeID Scheme ID from existing scheme.txt    YES       String
+amountEuro     Amount in Euro                        YES       Float
+============== ===================================== ========= =========
 
-TODO
+.. note::
+   If the amount is provided in a national currency please convert with current exchange rate.
 
-Scheme Selection
-================
+.. note::
+   For the scheme ID please take an existing scheme ID from the ``scheme.txt`` file of the
+   country (see :ref:`existing_data_format`). If you can't find a fitting scheme ID ask on
+   the GitHub issue page and use a temporary schemeID like ``AT-TMP1``.
 
-To make things more fun, you often have local abbreviations for the names of the funds 
-(e.g. *ELER* in german for the *EAFRD* fund). One tip: sometimes Google Translate 
-(use Google Chrome for direct translation) can help to translate even the abbreviation back on the local sites. 
-You can (normally) also distinguish the two funds by - like said above - having two posts for the *EAGF* and 
-only one for the *EAFRD*.
+UTF-8 Encoding
+--------------
+
+Please make sure that you use ``UTF-8`` as an encoding for your output file format and keep
+recipient data in the original language and characters.
+
+Here are some examples:
+
+* Bólyi Mezőgazdasági Termelő és Kereskedelmi Zrt. (Hungary)
+* GREENGROW spółka z ograniczonš odpowiedzialnociš (Poland)
+* Südzucker GmbH (Germany)
+* Alcoholes Gcía de la Cruz Vega (Spain)
 
 
+Technology
+==========
 
+At the moment, the following languages for scrapers are supported:
+
+* `Python <http://www.python.org/>`_
+* `Ruby <https://www.ruby-lang.org/>`_
+
+Please write the requirements you used in the comments of your scraper so that scrapers can
+be deployed in a central environment and can be executed independently from the creator.
 
 

@@ -173,7 +173,7 @@ Folder      Description
 locale      Minimal french localization file, ignore
 media       CSS, images and Javascript 
 misc        Small helper classes and functions
-templates   Central folder for all templates
+templates   Folder for common templates
 =========== =====================================================
 
 
