@@ -2,16 +2,32 @@
 Introduction
 ============
 
+Current Situation
+=================
+
 `FarmSubsidy <http://farmsubsidy.openspending.org/>`_ is a website that collects the payment data of
 the Common Agriculture Policy (CAP) which represents about a third of the EU budget. It was run by 
 a group of journalists and activists for the past years. In 2013 the `OpenSpending project <http://openspending.org/>`_
 of the `Open Knowledge Foundation <http://okfn.org/>`_ took over responsibility of the website.
 
+Since the old scrapers were proprietary and are not available any more one of the main tasks in the
+current situation is to build a new set of scrapers for each country released under an open licence
+which can be maintained by the community.
+
+This documentation is intended to give an overview about the requirements for those scrapers so that the
+data they provide can be integrated seamlessly and without too much hassle into the existing environment.
+
+So if you want to help, regardless if you are new to Farmsubsidy or if you have already accompanied the project
+over the years: your work will be highly appreciated. This is an extremly important topic, and since
+there are 28 member states in the European Union there is a good chance that you'll get your favorite country
+to write a scraper for! :-)
+
+.. _background:
 
 Background Information
 ======================
 
-If you need an introduction to the topic, you can have a look at the 
+If you need an introduction to the topic of farm subsidies, you can have a look at the 
 `Wikipedia article <https://en.wikipedia.org/wiki/Common_Agricultural_Policy>`_ about EU agricultural policiy 
 or at the `CAP website from the European Commision <http://ec.europa.eu/agriculture/cap-funding/index_en.htm>`_. 
 The wikipedia article is quite long, for an introduction to the structure of the subsidies just read the 

@@ -181,10 +181,52 @@ templates   Central folder for all templates
 Loading Data
 ============
 
+.. _data_model:
+
 Data model
 ----------
 
-TODO
+You can find the main data structure in the 
+`models.py file <https://github.com/openspending/Farm-Subsidy/blob/master/web/data/models.py>`_ 
+of the ``data`` app.
+
+The core models are:
+
+Recipient
+^^^^^^^^^
+A ``recipient`` is a receiver of subsidy payments and is in most cases a company or governmental 
+institution.
+
+There are no unique recipient IDs provided by the EU, so the IDs are provided internally by
+the system. The central identifying attribute for the recipient is the ``name`` attribute,
+though there will sometimes be double entries for the same entities due to inconsistencies in
+the source data.
+
+Most other information like adress data or geo information is not mandatory.
+
+Scheme
+^^^^^^
+A ``scheme`` is identifying a type of payment. Since the structure of the EU subsidy system has
+changed over the years you can also find different type of schemes for the payments, examples are:
+
+* Export subsidies
+* Market regulations
+* School Milk (yeah, healthy :-))
+* ...
+
+In the last years, the dominating schemes are:
+
+* European Agricultural Fund for Rural Development (EAFRD)
+* Direct payments under European Agricultural Guarantee Fund (EAGF direct)
+* Other payments under European Agricultural Guarantee Fund (EAGF other)
+
+See also the :ref:`background` chapter for where to read about this.
+
+Payment
+^^^^^^^
+A ``payment`` is a paid subsidy for a certain ``recipient`` connected with an existing ``scheme`` for 
+a special year. There can be several payments per year for different schemes for the same recipient.
+
 
 Download the data
 -----------------
