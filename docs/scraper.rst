@@ -123,12 +123,19 @@ amountEuro     Amount in Euro                        YES       Float
 ============== ===================================== ========= =========
 
 .. note::
-   If the amount is provided in a national currency please convert with current exchange rate.
+   Since the names you scrape will be later matched against the names already existing in the 
+   database please make some searches on the Farmsubsidy website and see, how names are formatted
+   there. Try to keep names written as they are on the website so matching will be easier
+   and double entries will be prevented.
 
 .. note::
    For the scheme ID please take an existing scheme ID from the ``scheme.txt`` file of the
    country (see :ref:`existing_data_format`). If you can't find a fitting scheme ID ask on
    the GitHub issue page and use a temporary schemeID like ``AT-TMP1``.
+
+.. note::
+   If the amount is provided in a national currency please convert with current exchange rate.
+
 
 UTF-8 Encoding
 --------------
@@ -147,12 +154,66 @@ Here are some examples:
 Technology
 ==========
 
-At the moment, the following languages for scrapers are supported:
+At the moment, the following technologies/programming languages for scrapers are supported:
 
-* `Python <http://www.python.org/>`_
-* `Ruby <https://www.ruby-lang.org/>`_
+Python/Scrapy
+-------------
 
-Please write the requirements you used in the comments of your scraper so that scrapers can
-be deployed in a central environment and can be executed independently from the creator.
+Introduction
+^^^^^^^^^^^^
+Scrapy is a python scraping framework with a lot of built in scraping functionality,
+for introductory information see the ``Scrapy`` website:
+
+* `Scrapy <http://scrapy.org/>`_
+
+Installation
+^^^^^^^^^^^^
+For running a Scrapy spider, please install the Scrapy version from the requirements file:
+
+* Requirements file: `requirements_scrapy.txt <https://github.com/openspending/farmsubsidy-scrapers/blob/master/requirements_python.txt>`_
+
+You can find a Scrapy project deployment in the GitHub repository in the ``scrapy_fs`` folder.
+In this deployment, there is already the data structure defined in the ``items.py`` file.
+
+Writing a spider
+^^^^^^^^^^^^^^^^
+There is a reference implementation for a scrapy spider for the UK website. The spider can be found
+at (`Link <https://github.com/openspending/farmsubsidy-scrapers/blob/master/scrapy_fs/scrapy_fs/spiders/uk_spider.py>`_::
+
+	scrapy_fs/scrapy_fs/spiders/uk_spider.py
+
+If you want to write a spider with Scrapy, please add/name your spider in an analog way and write a note
+in the root ``uk`` (``COUNTRY_CODE``) directory that the spider is being realized with Scrapy.
+
+A Scrapy spider can be executed like that from the ``scrapy_fs`` directory::
+
+	scrapy crawl UK -a year=YEAR
+
+A ``CSV`` output can be generated like this::
+
+	scrapy crawl UK -a year=2012 -o payment_2012.txt -t csv
 
 
+Python
+------
+If you have your own preferred way of writing scrapers with ``Python``, you can do that as well.
+Then please write your scraper in a form, that it can be executed from the command line.
+Add the requirements you need to the global python requirements file:
+
+* Global requirements file: `requirements_python.txt <https://github.com/openspending/farmsubsidy-scrapers/blob/master/requirements_python.txt>`_
+
+
+Ruby
+----
+You can also write a ``Ruby`` scraper, please also create the scraper in a command line-executable form.
+
+Add your requirements to the global Ruby Gemfile:
+
+* Global Gemfile: `Gemfile <https://github.com/openspending/farmsubsidy-scrapers/blob/master/requirements_python.txt>`_
+
+Other
+-----
+If you have another technology you want to use, please ask the person currently responsible for maintaining
+the Scrapers (try on GitHub). The reason for limiting the technologies a bit is that all scrapers for the different countries
+have to be maintained and an executable environment have to be kept up to be able to run the scraper
+from a central location independently from the creators.
