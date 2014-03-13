@@ -21,6 +21,14 @@ have a look at the `open issues <https://github.com/openspending/farmsubsidy-scr
 see if there is already somebody responsible and drop a note to avoid that there are several
 people working on the same scraper in parallel.
 
+.. note::
+   Before you write your scraper:
+   
+   * Check, if there is a **download button** on the data website (I actually didn't when I wrote the
+     example scraper! :-))
+   * Do some **creative googling** if someone else already has written a scraper for the site!
+     If so: try to get in contact and ask if the scraper can be used under an open licence.
+
 Data Sources
 ============
 
@@ -110,17 +118,18 @@ Recipient names will be matched against existing recipient names.
 
 The following table describe the single attribute formats.
 
-============== ===================================== ========= =========
-Attribute      Description                           Mandatory Data Type
-============== ===================================== ========= =========
-rName          Name of recipient                     YES       String
-rAdress1       Adress field 1 for recipient (Street) NO        String
-rAdress2       Adress field 2 for recipient (other)  NO        String
-rZipcode       Zipcode of recipient town             NO        String
-rTown          Town of recipient                     NO        String
-globalSchemeID Scheme ID from existing scheme.txt    YES       String
-amountEuro     Amount in Euro                        YES       Float
-============== ===================================== ========= =========
+====================== ===================================== ========= =========
+Attribute              Description                           Mandatory Data Type
+====================== ===================================== ========= =========
+rName                  Name of recipient                     YES       String
+rAdress1               Adress field 1 for recipient (Street) NO        String
+rAdress2               Adress field 2 for recipient (other)  NO        String
+rZipcode               Zipcode of recipient town             NO        String
+rTown                  Town of recipient                     NO        String
+globalSchemeID         Scheme ID from existing scheme.txt    YES       String
+amountEuro             Amount in Euro (1)                    YES(or 2) Float
+amountNationalCurrency Amount in national currency (2)       YES(or 1) Float
+====================== ===================================== ========= =========
 
 .. note::
    Since the names you scrape will be later matched against the names already existing in the 
@@ -134,7 +143,8 @@ amountEuro     Amount in Euro                        YES       Float
    the GitHub issue page and use a temporary schemeID like ``AT-TMP1``.
 
 .. note::
-   If the amount is provided in a national currency please convert with current exchange rate.
+   Please provide either the amount in Euro or in the national currency (e.g. for UK).
+   Don't make any implicit conversions, leave field not provided blank!
 
 
 UTF-8 Encoding
@@ -202,6 +212,9 @@ Add the requirements you need to the global python requirements file:
 
 * Global requirements file: `requirements_python.txt <https://github.com/openspending/farmsubsidy-scrapers/blob/master/requirements_python.txt>`_
 
+.. note::
+   If you've written a Python scraper you think can serve as a good starting point for other scrapers and
+   can be entered here as a reference implementation, please drop a note!
 
 Ruby
 ----
@@ -210,6 +223,10 @@ You can also write a ``Ruby`` scraper, please also create the scraper in a comma
 Add your requirements to the global Ruby Gemfile:
 
 * Global Gemfile: `Gemfile <https://github.com/openspending/farmsubsidy-scrapers/blob/master/requirements_python.txt>`_
+
+.. note::
+   If you've written a Ruby scraper you think can serve as a good starting point for other scrapers and
+   can be entered here as a reference implementation, please drop a note!
 
 Other
 -----
