@@ -86,7 +86,7 @@ def breadcrumb(request):
         breadcrumb.append({'Sub-Locations': location_breadcrumbs})
 
     # Schemes
-    if 'scheme' in path and len(path) >= 5:
+    if 'scheme' in path and 'admin' not in path and len(path) >= 5:
         scheme_breadcrumbs = []
         item = {
             'name': 'All Schemes',
