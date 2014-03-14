@@ -187,22 +187,24 @@ In this deployment, there is already the data structure defined in the ``items.p
 
 Writing a spider
 ^^^^^^^^^^^^^^^^
-There is a reference implementation for a scrapy spider for the UK website. The spider can be found
-at (`Link <https://github.com/openspending/farmsubsidy-scrapers/blob/master/scrapy_fs/scrapy_fs/spiders/uk_spider.py>`_::
+There is a reference implementation for a scrapy spider for the GB website. The spider can be found
+at (`Link <https://github.com/openspending/farmsubsidy-scrapers/blob/master/scrapy_fs/scrapy_fs/spiders/gb_spider.py>`_::
 
-	scrapy_fs/scrapy_fs/spiders/uk_spider.py
+	scrapy_fs/scrapy_fs/spiders/gb_spider.py
 
 If you want to write a spider with Scrapy, please add/name your spider in an analog way and write a note
-in the root ``uk`` (``COUNTRY_CODE``) directory that the spider is being realized with Scrapy.
+in the root ``gb`` (``COUNTRY_CODE``) directory that the spider is being realized with Scrapy.
 
 A Scrapy spider can be executed like that from the ``scrapy_fs`` directory::
 
-	scrapy crawl UK -a year=YEAR
+	scrapy crawl GB -a year=YEAR
 
 A ``CSV`` output can be generated like this::
 
-	scrapy crawl UK -a year=2012 -o payment_2012.txt -t csv
+	scrapy crawl GB -a year=2012 -o payment_2012.txt -t csv
 
+.. note::
+   Scrapy won't maintain the order of the attributes of the csv file. That's ok.
 
 Python
 ------
