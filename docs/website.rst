@@ -239,15 +239,20 @@ Payment
 A ``payment`` is a paid subsidy for a certain ``recipient`` connected with an existing ``scheme`` for 
 a special year. There can be several payments per year for different schemes for the same recipient.
 
+.. _loading_aggregated_data:
+
+Loading aggregated data (up to year 2012)
+-----------------------------------------
+
+For Farmsubsidy there are aggregated data files up to the farm subsidy data for 2012.
 
 Download the data
------------------
+^^^^^^^^^^^^^^^^^
 
-Data for Farmsubsidy in ``CSV`` format can be found here:
+You can download the aggregated data files in ``CSV`` format under the following URL:
 
 * http://data.farmsubsidy.org
 
-This is not necessarily the newest data available but should do it for test purposes.
 Data for a single country is provided in a packaged format, e.g.:
 
 * http://data.farmsubsidy.org/AT.tar.bz2
@@ -263,11 +268,66 @@ You need the following files there:
 * ``scheme.txt``
 
 Import the data
----------------
+^^^^^^^^^^^^^^^
 
 Now you can import the data with custom Django management commands, e.g. for Austria::
 
     python manage.py copier -c AT #takes some time...
+
+.. _loading_year_by_year_data:
+
+Loading year-by-year data (year 2013 or newer)
+----------------------------------------------
+
+Starting with the data for 2013 there are some changes in the data integration process going along with
+the introduction of the new Farmsubsidy GitHub `scraper repository <https://github.com/openspending/farmsubsidy-scrapers>`_.
+
+Data is now scraped and stored on a year-by-year basis (see: :ref:`scraper_data_format`) and has to be put
+in the data format for import in the following form::
+
+	data/csv/<CountryCode>/payment_2013.txt
+
+There is a new management command `load_year_data` in the `data` app of the Farmsubsidy sources which can
+be used like this::
+
+	python manage.py load_year_data COUNTRY YEAR DELIMITER [--simulate] [--ignore-existing]
+
+This management command loads data from the new simplified data format. It tries to match recipients
+by ``name`` attribute and connects a payment either to a matched recipient or creates a new one if
+no match was found. You can run the command with the ``--simulate`` option to get an impression of
+how many recipients would be matched.
+
+The ``--ignore-existing`` option lets you ignore already existing entries for the given year and country in the DB,
+otherwise there would be an error message.
+
+.. note::
+   This management command is still in a *BETA* stadium. If you use it for integration of data in the
+   production deployment please check how the data is integrated, if everthing is at the right place and if
+   format, attributes and number of payments are correct. Have a look at the code on 
+   `GitHub <https://github.com/openspending/Farm-Subsidy/blob/master/web/data/management/commands/load_year_data.py>`_
+   and correct if necessary!
+   
+   Note that there is also a new ID format for new ``recipient`` and ``payment`` entries calles ``ZID``.
+   This is for easier ordering and determining the latest IDs, since IDs are stored in text format (ahum :-)) at the
+   moment, which leads to ordering like this: "GB1, GB892, GB99".
+   
+   ``ZIDs`` are stored in a format like this: "[COUNTRY_CODE]Z[ID Number + 0s leading to 7 ciphers]",
+   leading to orderings like: "GBZ0000001, GBZ0000099, GBZ0000892".
+   
+   Please be careful here. It is not yet fully determined, if the introduction of a new ID format has
+   negative hidden side effects on other places (if you know, drop a note). At the moment ``ZIDs`` are also
+   quite (too) short due to a currently existing limitation of ``max_length=10`` for the ID fields. 
+
+
+Post-integration data processing
+--------------------------------
+
+Data denormalization
+^^^^^^^^^^^^^^^^^^^^
+
+At the moment there is some data denormalization going on reorganizing the data into different
+tables for performance purposes::
+
     python manage.py normalize -c AT #takes even longer...
 
 Repeat that for every country or test with data for just one country.
@@ -279,7 +339,7 @@ Now you should be able to browse the imported data on the local website and see 
 of ``recipients`` in the Django admin area.
 
 Update the search index
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 When all/some countries are imported, run search indexing::
 
@@ -291,7 +351,7 @@ When all/some countries are imported, run search indexing::
 Now you should be able to use the search box on the website and get some results.
 
 Update total payments number
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After this you can update the total payments number on the front page like this::
 
@@ -345,3 +405,5 @@ Changelog for the development of the website.
   are matched by ``name`` attribute against existing recipients. New ``ZID`` ID format for ``payments`` and
   ``recipients``. (see `load_year_data.py file <https://github.com/openspending/Farm-Subsidy/blob/master/web/data/management/commands/load_year_data.py>`_
   on GitHub)
+* Added documentation about how to use management command ``load_year_data``, additional infos about current
+  stadium and precautions when using (see: :ref:`loading_year_by_year_data`)

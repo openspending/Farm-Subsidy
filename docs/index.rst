@@ -34,6 +34,9 @@ Overview
    
    For remarks or questions please contact `holgerd77 <https://github.com/holgerd77>`_  on Github (March 15th, 2014).
 
+.. note::
+   New **farmsubsidy data** for **2013** should be release around **April/May 2014**.
+
 User Manual
 -----------
 
