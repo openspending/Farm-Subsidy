@@ -42,4 +42,17 @@ You will find these two posts separately distinguished in the data provided.
 The second fund is the *European Agricultural Fund for Rural Development (EAFRD)* 
 (`Wikipedia > EAFRD <https://en.wikipedia.org/wiki/European_Agricultural_Fund_for_Rural_Development>`_).
 
+Since EU funding changed over time, there were other so called ``schemes`` of payment though and are also
+still today, have a look at the :ref:`scheme` description in the data model chapter.
+
+Further Reading
+===============
+
+If you want to do some further reading, here are some sources to start:
+
+* `News section <http://farmsubsidy.openspending.org/news/>`_ on the Farmsubsidy website
+* Googling `"farm subsidies EU" <https://www.google.com/?gfe_rd=ctrl&ei=gyokU7aGMsOvtQbvhIGICQ&gws_rd=cr#q=farm+subsidies+eu>`_
+* Same on `Google News <https://www.google.com/?gfe_rd=ctrl&ei=gyokU7aGMsOvtQbvhIGICQ&gws_rd=cr#q=farm+subsidies+eu&tbm=nws>`_ 
+
+
 

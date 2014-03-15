@@ -1,3 +1,5 @@
+.. _website:
+
 =======
 Website
 =======
@@ -11,6 +13,8 @@ This is the developer documentation for the **Farmsubsidy website**, located und
 * https://github.com/openspending/Farm-Subsidy/
 
 The website is build with ``Python`` using ``Django`` as a web framework.
+
+.. _website_installation:
 
 Installation
 ============
@@ -140,6 +144,8 @@ Execute the following SQL manually in case your columns don't fit (it can't be m
 
 It's needed to make ``total`` columns default to ``0.0``.
 
+.. _website_source_overview:
+
 Source Overview
 ===============
 
@@ -176,7 +182,7 @@ misc        Small helper classes and functions
 templates   Folder for common templates
 =========== =====================================================
 
-
+.. _website_loading_data:
 
 Loading Data
 ============
@@ -192,6 +198,8 @@ of the ``data`` app.
 
 The core models are:
 
+.. _recipient:
+
 Recipient
 ^^^^^^^^^
 A ``recipient`` is a receiver of subsidy payments and is in most cases a company or governmental 
@@ -203,6 +211,8 @@ though there will sometimes be double entries for the same entities due to incon
 the source data.
 
 Most other information like adress data or geo information is not mandatory.
+
+.. _scheme:
 
 Scheme
 ^^^^^^
@@ -221,6 +231,8 @@ In the last years, the dominating schemes are:
 * Other payments under European Agricultural Guarantee Fund (EAGF other)
 
 See also the :ref:`background` chapter for where to read about this.
+
+.. _payment:
 
 Payment
 ^^^^^^^
@@ -313,3 +325,23 @@ Below are the steps that should be taken, assuming the code is actually running:
    because of the time it takes to run tests without the persistent database.
 
 4) run ``./manage.py quicktest``
+
+.. _website_changelog:
+
+Changelog (Website)
+===================
+
+Changelog for the development of the website.
+
+**Current Changes (version not yet determined)** (2014-03-15)
+
+* Added new section in docs for ``Website`` development documentation (see: :ref:`website`)
+* Added detailed installation instructions for website/DB deployment (see: :ref:`website_installation`)
+* Integration fragmented doc files of GitHub repository in new ``Sphinx`` documentation
+* Added source code description in docs with app overview (see: :ref:`website_source_overview`)
+* Added information about how to load data in the DB (see: :ref:`website_loading_data`)
+* Added new management command ``load_year_data`` in ``data`` app on GitHub for loading year specific data in 
+  new data format starting with the 2013 data. Data loading can be simulated with ``--simulate``, new recipients
+  are matched by ``name`` attribute against existing recipients. New ``ZID`` ID format for ``payments`` and
+  ``recipients``. (see `load_year_data.py file <https://github.com/openspending/Farm-Subsidy/blob/master/web/data/management/commands/load_year_data.py>`_
+  on GitHub)

@@ -1,3 +1,5 @@
+.. _scraper:
+
 =======
 Scraper
 =======
@@ -11,10 +13,16 @@ There is a separate **GitHub repository** collecting the different **scrapers**:
 
 * https://github.com/openspending/farmsubsidy-scrapers
 
-In the repository there is a separate folder for each scraper, named by the country code of the
+In the repository there is a **separate folder** for **each scraper**, named by the country code of the
 scraper, e.g. ``at`` for Austria:
 
 * https://github.com/openspending/farmsubsidy-scrapers/tree/master/at
+
+There is also a very detailed **Data Overview document** on **Google Docs**. Public data urls are not
+up-to-date any more, but make sure to notice the **Data Documentation URLs** at the end of the ``detail view``
+sheet:
+
+*  `Data Overview Document (Google Docs) <https://docs.google.com/spreadsheet/ccc?key=0Ajagl3TOC7X_dFlzQ0ljaUxUWVNmNE40TGdweWNlcEE&hl=en#gid=0>`_
 
 For each scraper there is a corresponding issue on GitHub. If you want to help out with a scraper
 have a look at the `open issues <https://github.com/openspending/farmsubsidy-scrapers/issues?labels=memberstate&state=open>`_,
@@ -93,6 +101,7 @@ Start of a payment.txt file::
 	1223536;"AT1223536";"AT12327";"AT12327";"AT5";36445.65;;"2008";"AT"
 	1223537;"AT1223537";"AT44239";"AT44239";"AT5";82.10;;"2008";"AT"
 
+.. _scraper_data_format:
 
 Scraper Data Format
 ===================
@@ -160,11 +169,14 @@ Here are some examples:
 * Südzucker GmbH (Germany)
 * Alcoholes Gcía de la Cruz Vega (Spain)
 
+.. _scraper_technology:
 
 Technology
 ==========
 
 At the moment, the following technologies/programming languages for scrapers are supported:
+
+.. _technology_scrapy:
 
 Python/Scrapy
 -------------
@@ -236,3 +248,23 @@ If you have another technology you want to use, please ask the person currently 
 the Scrapers (try on GitHub). The reason for limiting the technologies a bit is that all scrapers for the different countries
 have to be maintained and an executable environment have to be kept up to be able to run the scraper
 from a central location independently from the creators.
+
+.. _scraper_changelog:
+
+Changelog (Scraper)
+===================
+
+This changelog deals mainly with the ``data format definition`` for the scrapers (see: :ref:`scraper_data_format`)
+and the ``technology supported`` in the scraper repository (see: :ref:`scraper_technology`).
+
+**Changes in version DRAFT1** (2014-03-15)
+
+* Added basic documentation for scraper repository (see: :ref:`scraper`)
+* Added documentation for existing data format (see: :ref:`existing_data_format`)
+* Added *DRAFT* definition for a new simplified scraper data format (see: :ref:`scraper_data_format`)
+* Added section for supported technologies (see: :ref:`scraper_technology`)
+* Added ``scrapy_fs`` Scrapy project on GitHub  
+  for unified Scrapy scraper development, ``items.py`` file for data format definition, ``pipelines.py`` file
+  for basic data format validation (see: `GitHub scrapy_fs directory <https://github.com/openspending/farmsubsidy-scrapers/tree/master/scrapy_fs>`_)
+* Added Scrapy reference scraper for ``GB`` (see `gb_spider.py on GitHub <https://github.com/openspending/farmsubsidy-scrapers/blob/master/scrapy_fs/scrapy_fs/spiders/gb_spider.py>`_)
+* Documentation about how to execute Scrapy spiders (see: :ref:`technology_scrapy`) 

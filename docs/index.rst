@@ -23,8 +23,16 @@ Overview
   `GitHub repository <https://github.com/openspending/farmsubsidy-scrapers>`_.
 
 .. note::
-   Current work in progress, for remarks or questions
-   please contact `holgerd77 <https://github.com/holgerd77>`_  on Github (March 10th, 2014).
+   This document - especially the definition for new data format starting in 2013 in the ``scraper`` section
+   (see: :ref:`scraper_data_format`) is currently in **DRAFT** status, which means that there will be some
+   changes in the next weeks. For recent changes see both the ``website changelog`` (:ref:`website_changelog`) and 
+   the ``scraper_changelog`` (:ref:`scraper_changelog`).
+   
+   *This doesn't mean, that you shouldn't write your scraper yet* since life is a long quite (and ever changing)
+   river and 80+ percent of your work will be able to be kept. Just be aware that there might be the need
+   of some last changes to get everything to work!
+   
+   For remarks or questions please contact `holgerd77 <https://github.com/holgerd77>`_  on Github (March 15th, 2014).
 
 User Manual
 -----------
