@@ -1,261 +1,246 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
     {% load i18n %}
     {% load list_tags %}
     {% load cache %}
     {% load humanize %}
     {% load typogrify %}
     {% load inthenews %}
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta name="google-site-verification" content="hyG2KNMuw7MW6cT7ImXaOIJ44j9YW6PJPh0M-_4lv8U" />
-    <title>{% block title %}{{title}}{% endblock %} | FarmSubsidy.org</title>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/reset-min.css"/>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css"  media="all"/>
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/print.css"  media="print"/>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.example.min.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.7.1.custom.min.js"></script>
-    <script src="{{ STATIC_URL }}js/scripts.js" type="text/javascript" charset="utf-8"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="{% url 'feature_feed' %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
+    <title>{% block title %}{{title}}{% endblock %} | FarmSubsidy.org</title>
+
+    <meta name="description" content="FarmSubsidy shows how much money farm">
+    <meta name="author" content="">
 
     {% block extrameta %}{% endblock %}
 
-    {% if list_enabled %}
-        <link rel="stylesheet" href="/media/css/custom_lists.css" type="text/css" media="screen, projection">
-        <script src="{{ STATIC_URL }}js/custom_lists.js" type="text/javascript" charset="utf-8"></script>
-        <script src="{{ STATIC_URL }}js/lists.js" type="text/javascript" charset="utf-8"></script>
-    {% endif %}
+    <meta name="google-site-verification" content="hyG2KNMuw7MW6cT7ImXaOIJ44j9YW6PJPh0M-_4lv8U" />
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/farmsubsidy.css"/>
+
+    <link href="{% url 'feature_feed' %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
 
 </head>
 
-<body id="{% block body_style %}main{% endblock %}" class="{% block body_class %}none{% endblock %} {% if list_items.create %}list_enabled{% endif %}">
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 top-area">
+        <div class="row loginbar">
+          <div class="pull-right">
+            {% if request.user.is_authenticated %}
+              Logged in as {{ request.user.username }} | <a href="{{ request.user.profile_set.all.0.get_absolute_url }}">My account</a> | <a href="{% url 'my_account:logout' %}">Sign out</a>
+            {% else %}
+              <a href="{% url 'my_account:login' %}">Create an Account</a> or <a href="{% url 'my_account:login' %}">sign In</a>
+            {% endif %}
+          </div>
+        </div>
 
-{# Topbar #}
-<div id="topbar">
-    <a href="http://www.twitter.com/farmsubsidy/">
-        <img src="{{ STATIC_URL }}images/follow.png" alt="Follow us on Twitter"/>
-      </a>
-    <form method="post" action="http://app.icontact.com/icp/signup.php" accept-charset="UTF-8" onsubmit="return verifyRequired();">
-            <fieldset>
-                <input name="redirect" value="http://www.icontact.com/www/signup/thanks.html" type="hidden"/>
-                <input name="errorredirect" value="http://www.icontact.com/www/signup/error.html" type="hidden"/>
-                <input name="listid" value="3290" type="hidden"/>
-                <input name="specialid:3290" value="OMN5" type="hidden"/>
-                <input name="clientid" value="161514" type="hidden"/>
-                <input name="formid" value="278" type="hidden"/>
-                <input name="reallistid" value="1" type="hidden"/>
-                <input name="doubleopt" value="1" type="hidden"/>
-            <script type="text/javascript">
-                if (document.location.protocol === "https:"){
-                    document.icpsignup.action = "https://app.icontact.com/icp/signup.php";
-                }
-                function verifyRequired() {
-                    if (document.icpsignup["fields_email"].value == "") {
-                        document.icpsignup["fields_email"].focus();
-                        alert("The Email field is required.");
-                        return false;
-                    }
-                    return true;
-                }
-            </script>
-            <label for="fields_email" id="newsletter_label">Sign up for our newsletter</label>
-            <input type="text" name="fields_email" value="" id="fields_email" size="20"/>
-            <input name="Submit" value="ok" type="submit"/>
-        </fieldset>
-    </form>
-    <div class="loginbar">
-    {% if request.user.is_authenticated %}
-        Logged in as {{ request.user.username }} | <a href="{{ request.user.profile_set.all.0.get_absolute_url }}">My account</a> | <a href="{% url 'my_account:logout' %}">Sign out</a>
-    {% else %}
-        <a href="{% url 'my_account:login' %}">Create an account</a> or <a href="{% url 'my_account:login' %}">sign in</a>
-    {% endif %}
-    </div>
-</div>
-
-{# outer #}
-<div id="outer">
-
-    {# header #}
-    <div id="header">
-        <div id="photos" class="{{header_class}}">
+        <div class="row">
+          <div class="pull-right tagline">
+            {% if sum_of_payments %}
+              &euro;{{ sum_of_payments|intword }} in payments to {{ total_recipients }} recipients,
+              <br/>
+              including lots of fresh payments from 2013
+            {% endif %}
+          </div>
 
         </div>
-        <h1>
-            <a href="/"><span>farmsubsidy.org</span></a>
-        </h1>
-        <h2>Discover who gets what from the Common Agricultural Policy</h2>
 
-        {# search form #}
-        <form id="search_form" action="{% url 'search' %}" method="get" accept-charset="utf-8" class="transparent">
-            <h2><label for="search" class="section_title">Search</label></h2>
-            <input type="text" name="q" value="{{ q }}" id="q" title="Enter a company name or place">
-            <input type="submit" value="Search" class="submit">
-            <small>e.g. <a href="{% url 'search' %}?q=nestle">Nestle</a> or <a href="{% url 'search' %}?q=windsor">Windsor</a></small>
-        </form>
+        <div class="row">
 
-        {% if sum_of_payments %}
-            <span id="totalizer" class="transparent">&euro;{{ sum_of_payments|intword }} in payments to {{ total_recipients }} recipients</span>
-        {% endif %}
+          <div class="pull-right col-lg-5 search-form">
+            <form action="{% url 'search' %}" method="get" accept-charset="utf-8">
 
-
-        {# main menu #}
-        <ul id="mainmenu">
-            {% load active_url %}
-            <li><a href="/" >Home</a></li>
-            <li><a href="{% url 'countries' %}">Countries</a></li>
-            {% if list_enabled %}
-            <li><a href="/lists/">Lists</a></li>
-            {% endif %}
-            <li><a href="{% url 'transparency_index' %}">Transparency Index</a></li>
-            <li><a href="/news/">News</a></li>
-            <li class="last"><a href="/faq/">FAQs</a></li>
-        </ul>
-
-      {# {% load user %} #}
-      {# {% user_menu user %} #}
-    </div>
-    {% if not is_home %}
-        {% if featured_items %}
-                <div class="features">
-                  <ul id="features">
-                      {% if featured_items.0 %}
-                      <li>
-                          <h5><a href="{{ featured_items.0.get_absolute_url }}">{{ featured_items.0.title }}</a></h5>
-                        <p>{{ featured_items.0.teaser|truncatewords:"25" }}</p>
-                      </li>
-                      {% endif %}
-                      {% if featured_items.1 %}
-                        <li>
-                          <h5><a href="{{ featured_items.1.get_absolute_url }}">{{ featured_items.1.title }}</a></h5>
-                          <p>{{ featured_items.1.teaser|truncatewords:"25" }}</p>
-
-                        </li>
-                      {% endif %}
-                      {% if featured_items.2 %}
-                      <li>
-                        <h5><a href="{{ featured_items.2.get_absolute_url }}">
-        {{ featured_items.2.title }}</a></h5>
-                        <p>{{ featured_items.2.teaser|truncatewords:"25" }}</p>
-                      </li>
-                      {% endif %}
-                  </ul>
-                  <br class="clear"/>
-                  <h4>latest news &amp; reports from the farmsubsidy.org network</h4>
+              <div class="input-group">
+                <input type="text" name="q" value="{{ q }}" id="q" placeholder="Enter a company name or place" class="form-control input-lg">
+                <span class="input-group-btn">
+                  <button class="btn btn-default input-lg" type="submit">Search</button>
+                </span>
               </div>
-        {% endif %}
-    {% endif %}
-    <div id="right">
-      {% block right %}
+              <small class="search-examples">
+                e.g. <a href="{% url 'search' %}?q=nestle">Nestle</a> or <a href="{% url 'search' %}?q=windsor">Windsor</a>
+              </small>
+            </form>
+          </div>
+        </div>
+        <div class="the-cow">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="navbar navbar-fs" role="navigation">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">
+            <strong>FarmSubsidy</strong>.org
+          </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active">
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="{% url 'countries' %}">Countries</a>
+            </li>
+            {% comment %}
+            <li>
+              <a href="{% url 'transparency_index' %}">
+                Transparency Index
+              </a>
+            </li>
+            {% endcomment %}
+            <li>
+              <a href="/news/">News &amp; Reports</a>
+            </li>
+            <li>
+              <a href="/faq/">FAQ</a>
+            </li>
+            <li>
+              <a class="twitter" href="https://twitter.com/farmsubsidy/">
+                Twitter
+              </a>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="row content-row">
+      <div class="content col-lg-8 col-md-8">
+        <div class="heading">
+          <p class="breadcrumbs">
+            {% block breadcrumb %}{% endblock %}
+          </p>
+          <h2>
+            {% block page_title %}{% endblock %}
+          </h2>
+        </div>
+
+        {% block error %}{% endblock %}
+
+        {% block content %}{% endblock %}
+
+      </div>
+
+      <div class="sidebar col-lg-4 col-md-4">
+        <div class="right">
+          {% block right %}
             {% if featured_items %}
+              <div class="sidebar-widget">
                 <h5>Latest news</h5>
                 <ul>
                   {% if featured_items.0 %}
-                  <li>
-                      <h5><a href="{{ featured_items.0.get_absolute_url }}">{{ featured_items.0.title }}</a></h5>
-                    <p>{{ featured_items.0.teaser|truncatewords:"25"|typogrify }}</p>
-                  </li>
+                    <li>
+                      <h5>
+                        <a href="{{ featured_items.0.get_absolute_url }}">{{ featured_items.0.title }}</a>
+                      </h5>
+                      <p>
+                        {{ featured_items.0.teaser|truncatewords:"25"|typogrify }}
+                      </p>
+                    </li>
                   {% endif %}
                   {% if featured_items.1 %}
                     <li>
                       <h5><a href="{{ featured_items.1.get_absolute_url }}">{{ featured_items.1.title }}</a></h5>
                       <p>{{ featured_items.1.teaser|truncatewords:"25"|typogrify }}</p>
-
                     </li>
                   {% endif %}
                   {% if featured_items.2 %}
-                  <li>
-                    <h5><a href="{{ featured_items.2.get_absolute_url }}">
-                {{ featured_items.2.title }}</a></h5>
-                    <p>{{ featured_items.2.teaser|truncatewords:"25"|typogrify }}</p>
-                  </li>
+                    <li>
+                      <h5>
+                        <a href="{{ featured_items.2.get_absolute_url }}">
+                          {{ featured_items.2.title }}
+                        </a>
+                      </h5>
+                      <p>
+                        {{ featured_items.2.teaser|truncatewords:"25"|typogrify }}
+                      </p>
+                    </li>
                   {% endif %}
                 </ul>
+              </div>
             {% endif %}
-      {% endblock %}
-      {% include "blocks/list_view.html" %}
-    </div>
-
-    <div id="content">
-        <div class="heading">
-            <p class="breadcrumbs">
-                {% block breadcrumb %}{% endblock %}
+            {% block right_list_view %}
+              {% include "blocks/list_view.html" %}
+            {% endblock right_list_view %}
+          {% endblock %}
+          <div class="sidebar-widget">
+            <div class="text-center">
+                <a href="https://openspending.org">
+                    <img src="{{ STATIC_URL }}images/openspending.png" alt="OpenSpending"/>
+                </a>
+                <br/>
+                <a href="http://journalismfund.eu/">
+                    <img src="{{ STATIC_URL }}images/journalismfundeu.png" alt="JournalimFund.eu"/>
+                </a>
+            </div>
+            <p>
+                FarmSubsidy.org is a project of <a href="http://journalismfund.eu/">European Journalism Fund</a>, a non-profit organisation, and powered by <a href="https://openspending.org">OpenSpending</a> of <a href="https://okfn.org">Open Knowledge</a>.
             </p>
-            <h2>{% block page_title %}{% endblock %}</h2>
+          </div>
         </div>
-        {% block error %}
-
-        {% endblock %}
-
-        {% block content %}
-        {% endblock %}
+      </div>
     </div>
 
-
-    {% block footer %}
-      <div id="footer">
-
-        <div id="about">
-            <a href="http://eutransparency.org">
-                <img src="{{ STATIC_URL }}images/eutlogo.png" width="241" height="92" />
-            </a>
-              <p>
-                    Farmsubsidy.org is a project of EU Transparency, a non-profit organisation.
-              </p>
+    <div class="row footer">
+      {% block footer %}
+        <div class="col-lg-3 col-lg-offset-1">
+          <h5>Looking for more information?</h5>
+          <ul class="list-unstyled">
+            <li><a href="/news">News &amp; reports</a></li>
+            <li><a href="/legal">Legal / Privacy Policy</a></li>
+            <li><a href="/about">About us</a></li>
+          </ul>
         </div>
-
-        <div id="links">
-            <dl>
-                {% if featured_items %}
-                    <dt>Latest news:</dt>
-                    <dd>
-                        <ul>
-                            <li><a href="{{ featured_items.0.get_absolute_url }}">{{ featured_items.0.title }}</a></li>
-                        </ul>
-                    </dd>
-                {% endif %}
-                <dt>Looking for more information?</dt>
-                <dd>
-                    <ul>
-                        <li><a href="/news">News &amp; reports</a></li>
-                        <li><a href="/legal">Legal / Privacy Policy</a></li>
-                        <li><a href="/about">About us</a></li>
-                    </ul>
-                </dd>
-                <dt>Get in touch:</dt>
-                <dd>
-                    <ul>
-                        <li><a href="mailto:farmsubsidy[-at-]openspending[-dot-]org">Email us</a></li>
-                        <li><a href="http://twitter.com/farmsubsidy">Follow farmsubsidy.org on Twitter</a></li>
-                    </ul>
-                </dd>
-                <dt>Technical:</dt>
-                <dd>
-                    <ul>
-                        <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
-                        <li><a href="http://data.farmsubsidy.org/">Get the raw data</a></li>
-                        {# <li><a href="/api/">API</a></li> #}
-                    </ul>
-                </dd>
-           </dl>
+        <div class="col-lg-3 col-lg-offset-1">
+          <h5>Get in touch:</h5>
+          <ul class="list-unstyled">
+            <li><a href="mailto:farmsubsidy[-at-]openspending[-dot-]org">Email</a></li>
+            <li>
+              <a href="http://twitter.com/farmsubsidy">Twitter</a>
+            </li>
+          </ul>
         </div>
+        <div class="col-lg-3 col-lg-offset-1">
+          <h5>Technical</h5>
+          <ul class="list-unstyled">
+            <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
+            <li><a href="http://data.farmsubsidy.org/">Get the raw data</a></li>
+            {# <li><a href="/api/">API</a></li> #}
+          </ul>
+        </div>
+      {% endblock %}
+    </div>
+  </div>
 
-      </div>
-    {% endblock %}
-</div>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+{% block analytics %}
+  {% if not debug %}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-33874954-17', 'openspending.org');
-  ga('send', 'pageview');
+      ga('create', 'UA-33874954-17', 'openspending.org');
+      ga('send', 'pageview');
+    </script>
+  {% endif %}
+{% endblock analytics %}
 
-</script>
+<script src="{{ STATIC_URL }}js/jquery.js"></script>
+{% block footer_scripts %}{% endblock %}
+
 </body>
 </html>
-{% block footer_scripts %}{% endblock %}

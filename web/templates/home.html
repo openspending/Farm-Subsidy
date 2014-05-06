@@ -8,71 +8,40 @@
 {% block title %}Explore European Common Agricultural Policy farm subsidy payments{% endblock %}
 
 {% block content %}
-{% load inthenews %}
-{% latestnews "" 1 "Blog" 1 %}
 
-<div class="section">
-    <h2>
-        Welcome to farmsubsidy.org!
-    </h2>
-    <p class="intro">
-        The European Union spends around &euro;55 bn. a year on farm subsidies. This website helps people find out who gets what, and why.
+    <h1>Welcome to farmsubsidy.org</h1>
+    <p class="lead">
+        The European Union spends around €55 billion a year on farm subsidies.<br/>
+        This site tells you who receives the money.
     </p>
-</div>
-
-<div class="section">
-    <h3>Latest news &amp; reports from the farmsubsidy.org network</h3>
-    {% if featured_items.0 %}                  
-        <h5><a href="{{ featured_items.0.get_absolute_url }}">{{ featured_items.0.title }}</a></h5>
-        <p>{{ featured_items.0.teaser|truncatewords:"25" }}</p>
-    {% endif %}                  
-    {% if featured_items.1 %}
-      <h5><a href="{{ featured_items.1.get_absolute_url }}">{{ featured_items.1.title }}</a></h5>
-      <p>{{ featured_items.1.teaser|truncatewords:"25" }}</p>
-    {% endif %}
-    {% if featured_items.2 %}        
-    <h5><a href="{{ featured_items.2.get_absolute_url }}">
-    {{ featured_items.2.title }}</a></h5>
-    <p>{{ featured_items.2.teaser|truncatewords:"25" }}</p>
-    {% endif %}
-</div>
-
-<div class="section quotes">
-    <h3>What people are saying about farmsubsidy.org</h3>
-    <span class="quote"><blockquote>"A valuable public service"</blockquote><cite> - Mark Halle, Global Subsidies Initiative</cite></span>
-    <span class="quote"><blockquote>"Dogged work"</blockquote><cite> - The Guardian</cite></span>
-    <span class="quote"><blockquote>"Extremely important"</blockquote><cite> - Stephen Castle, International Herald Tribune</cite></span>
-    <span class="quote"><blockquote>"Geek activism done right"</blockquote><cite> - <a href="http://www.worldchanging.com" target="_blank">World Changing</a></cite></span>
-    <span class="quote"><blockquote>"Marvelous"</blockquote><cite> - Tim Lang, Professor of Food Policy</cite></span>
-</div>
-
-<div class="section">
-    
-    <h3>Watch a short film about the project:</h3>
-    <object width="640" height="385"><param name="movie" value="http://www.youtube-nocookie.com/v/dz_rMvIPEDI?fs=1&amp;hl=en_US&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube-nocookie.com/v/dz_rMvIPEDI?fs=1&amp;hl=en_US&amp;rel=0" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="640" height="385"></embed></object>
-    
-</div>
-
-<div class="section">
-    <h3>Latest annotations</h3>
-    <ul>
-    {% for annotation in latest_annotations %}
-        <li>{{ annotation.user.username }} annotated <a href="{{ annotation.content_object.get_absolute_url }}">{{ annotation.content_object.name }}</a>:  <blockquote>{{ annotation.comment|markdown|striptags|truncatewords:30 }}</blockquote></li>        
-    {% endfor %}
-    </ul>
-</div>
+    <div class="section">
+        <h3>Latest annotations</h3>
+        <ul>
+        {% for annotation in latest_annotations %}
+            <li>{{ annotation.user.username }} annotated <a href="{{ annotation.content_object.get_absolute_url }}">{{ annotation.content_object.name }}</a>:  <blockquote>{{ annotation.comment|markdown|striptags|truncatewords:30 }}</blockquote></li>
+        {% endfor %}
+        </ul>
+    </div>
 
 {% endblock %}
 
 
 {% block right %}
-    <h3>All Time Top Recipients</h3>
-    <ul>
-        {% for r in top_eu %}
-          <li><a href="{{ r.get_absolute_url }}">{{ r.name }}</a></li>
-        {% endfor %}
-    </ul>
-    <h3>Browse by country</h3>
-    {% load countries %}
-    {% country_menu %}
+    {% if top_eu %}
+        <div class="sidebar-widget">
+            <h3>All Time Top Recipients</h3>
+            <ul class="list-unstyled">
+                {% for r in top_eu %}
+                    <li><a href="{{ r.get_absolute_url }}">{{ r.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="sidebar-widget">
+        <h3>Browse by country</h3>
+        {% load countries %}
+        {% country_menu %}
+    </div>
+    </div>
 {% endblock %}

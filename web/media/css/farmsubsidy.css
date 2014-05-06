@@ -1,0 +1,117 @@
+body {
+  background-color: #f6f6f6;
+  margin:0;
+  padding:0;
+}
+
+a, a:hover {
+  color: #51B580;
+}
+
+.top-area {
+  background: url('../images/header_10.jpg') top center no-repeat;
+  height: 225px;
+  position: relative;
+}
+
+.loginbar {
+  background-color: rgba(0,0,0,0.4);
+  padding: 10px 20px 10px 10px;
+  color: #fff;
+}
+
+.loginbar a {
+  color: #fff;
+  font-weight: bold;
+}
+
+.tagline {
+  color: #fff;
+  font-size: 24px;
+  text-shadow: 1px 1px 1px #000;
+  padding: 10px;
+}
+
+.search-form {
+  padding: 10px;
+}
+
+.search-form .search-examples {
+  color: #fff;
+  margin-left: 20px
+}
+
+.search-form .search-examples > a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.the-cow {
+  background: url('../images/logo_cow.png') no-repeat center center;
+  width: 202px;
+  height: 167px;
+  position: absolute;
+  bottom: -8px;
+  z-index: 100;
+}
+
+.navbar-fs {
+  background-color: #139744;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0 10px;
+}
+
+.navbar-fs .navbar-nav>li>a {
+  color: #fff;
+}
+
+.nav>li>a:hover, .nav>li>a:focus {
+  color: #fff;
+  background-color: #333;
+}
+
+.navbar-fs .navbar-brand {
+  color: #fff;
+}
+
+.content-row {
+  background-color: #fff;
+}
+
+.content {
+  padding: 0 20px;
+  background-color: #fff;
+}
+
+.sidebar {
+  background-color: #eee;
+}
+
+.right {
+  padding-top: 15px;
+  background-color: #eee;
+}
+
+.sidebar-widget {
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 2px
+}
+
+.sidebar-widget h3 {
+  margin-top: 0;
+}
+
+.footer {
+  padding: 30px 0;
+  background-color: #161614;
+  border-top: 8px #139744 solid;
+  color: #C6C6C4;
+}
+
+.footer a {
+  color: #C6C6C4;
+}
