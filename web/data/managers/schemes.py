@@ -40,7 +40,7 @@ class SchemeYearManager(models.Manager):
         kwargs = {}
         if int(year) != 0:
             kwargs['year'] = year
-        if country and country is not "EU":
+        if country and country != "EU":
             kwargs['countrypayment'] = country
 
         schemes = (self.get_query_set()
