@@ -86,10 +86,10 @@ def country(request, country, year=DEFAULT_YEAR):
                         key="country.%s.%s.top_recipients" % (country, year),
                         cache_type="filesystem")
 
-    if country and country != "EU":
-        top_schemes = models.SchemeYear.objects.top_schemes(year=year, country=country)[:5]
+    if year == 0:
+        top_schemes = models.Scheme.objects.top_schemes(country=country)[:5]
     else:
-        top_schemes = models.SchemeYear.objects.top_schemes(year=year)[:5]
+        top_schemes = models.SchemeYear.objects.top_schemes(year=year, country=country)[:5]
 
     # Cache top_schemes
     top_schemes = QuerySetCache(
