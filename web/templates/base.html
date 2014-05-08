@@ -60,7 +60,7 @@
               <div class="input-group">
                 <input type="text" name="q" value="{{ q }}" id="q" placeholder="Enter a company name or place" class="form-control input-lg">
                 <span class="input-group-btn">
-                  <button class="btn btn-default input-lg" type="submit">Search</button>
+                  <button class="btn btn-fs-search input-lg" type="submit">Search</button>
                 </span>
               </div>
               <small class="search-examples">
@@ -70,6 +70,7 @@
           </div>
         </div>
         <div class="the-cow">
+          <img src="{{ STATIC_URL }}images/logo-cow.png" alt="FarmSubsidy Euro Cow"/>
         </div>
       </div>
     </div>
@@ -193,35 +194,38 @@
         </div>
       </div>
     </div>
-
-    <div class="row footer">
-      {% block footer %}
-        <div class="col-lg-3 col-lg-offset-1">
-          <h5>Looking for more information?</h5>
-          <ul class="list-unstyled">
-            <li><a href="/news">News &amp; reports</a></li>
-            <li><a href="/legal">Legal / Privacy Policy</a></li>
-            <li><a href="/about">About us</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-3 col-lg-offset-1">
-          <h5>Get in touch:</h5>
-          <ul class="list-unstyled">
-            <li><a href="mailto:farmsubsidy[-at-]openspending[-dot-]org">Email</a></li>
-            <li>
-              <a href="http://twitter.com/farmsubsidy">Twitter</a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-lg-3 col-lg-offset-1">
-          <h5>Technical</h5>
-          <ul class="list-unstyled">
-            <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
-            <li><a href="http://data.farmsubsidy.org/">Get the raw data</a></li>
-            {# <li><a href="/api/">API</a></li> #}
-          </ul>
-        </div>
-      {% endblock %}
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        {% block footer %}
+          <div class="col-lg-3 col-lg-offset-1">
+            <h5>Looking for more information?</h5>
+            <ul class="list-unstyled">
+              <li><a href="/news">News &amp; reports</a></li>
+              <li><a href="/legal">Legal / Privacy Policy</a></li>
+              <li><a href="/about">About us</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-lg-offset-1">
+            <h5>Get in touch:</h5>
+            <ul class="list-unstyled">
+              <li><a href="mailto:farmsubsidy[-at-]openspending[-dot-]org">Email</a></li>
+              <li>
+                <a href="http://twitter.com/farmsubsidy">Twitter</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-lg-3 col-lg-offset-1">
+            <h5>Technical</h5>
+            <ul class="list-unstyled">
+              <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
+              <li><a href="http://data.farmsubsidy.org/">Get the raw data</a></li>
+              {# <li><a href="/api/">API</a></li> #}
+            </ul>
+          </div>
+        {% endblock %}
+      </div>
     </div>
   </div>
 
