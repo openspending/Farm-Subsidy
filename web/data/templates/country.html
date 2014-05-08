@@ -49,7 +49,7 @@
 
 <div class="section">
   <h3>Top recipients</h3>
-  <table>
+  <table class="table">
     <thead>
       <th>Recipient name</th>
       <th class="money">Amount</th>
@@ -99,7 +99,7 @@
 
 <div class="section">
     <h3>Top schemes</h3>
-    <table>
+    <table class="table">
     <thead>
       <th>Scheme name</th>
       <th class="money">Amount</th>
@@ -172,6 +172,6 @@
 
   {% latestnews country.code %}
 
-  {{block.super}}
+  {{ block.super }}
 
 {% endblock %}

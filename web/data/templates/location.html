@@ -20,20 +20,20 @@
 {% endblock %}
 
 {% block content %}
-  {% if location.recipients %}    
+  {% if location.recipients %}
     <p>{{ location.recipients|intcomma }} recipients in {{ location.name|title }} received a total of &euro;{{ location.total|floatformat:0|intcomma }} </p>
-  {% endif %} 
-  
+  {% endif %}
+
   {% if sub_locations %}
     <div class="block top_recipients">
       <h3>Breakdown by place</h3>
-      <table>  
+      <table class="table">
         <thead class="sort-{{ sub_location_sort }}">
           <th>Name</th>
           <th class="money">Amount</th>
           <th>Recipients</th>
           <th class="money">Average per recipient</th>
-          
+
         </thead>
         <tbody>
           {% for sub_location in sub_locations %}
@@ -50,12 +50,12 @@
       </table>
     </div>
   {% endif %}
-  
-  
+
+
   <div class="block top_recipients">
     {% autopaginate location_recipients 30 as location_recipients %}
     <h3>Recipients</h3>
-    <table>  
+    <table class="table">
       <thead>
         <th>Name</th>
         <th class="money">Amount</th>
@@ -72,13 +72,8 @@
     </table>
     <h4 class="pager">{% paginate %}</h4>
   </div>
-  
-  
-  
-  
-  
-{% endblock %}
 
+{% endblock %}
 
 
 {% block right %}
