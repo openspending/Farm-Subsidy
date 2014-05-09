@@ -1,8 +1,5 @@
 # encoding: utf-8
 from django.db import models
-from django.conf import settings
-
-DEFAULT_YEAR = settings.DEFAULT_YEAR
 
 
 class RecipientManager(models.Manager):
@@ -43,9 +40,3 @@ class RecipientManager(models.Manager):
         qs = self.filter(**kwargs)
         # qs = qs.only('name', 'total', 'countrypayment',)
         return qs
-
-
-
-
-
-

@@ -23,7 +23,6 @@ import models
 from frontend.models import Profile
 from frontend.forms import DataAgreementForm
 
-DEFAULT_YEAR = settings.DEFAULT_YEAR
 LATEST_YEAR = settings.LATEST_YEAR
 
 
@@ -55,7 +54,7 @@ def countries(request):
         context_instance=RequestContext(request))
 
 
-def country(request, country, year=DEFAULT_YEAR):
+def country(request, country, year=None):
     """
     Provides all the variables for the country pages at, for example "/AT/"
 
@@ -70,14 +69,15 @@ def country(request, country, year=DEFAULT_YEAR):
     years_max_min = models.CountryYear.objects.year_max_min(country)
     years = models.CountryYear.objects.filter(country=country)
 
-    if year != 0:
-        top_recipients = models.RecipientYear.objects.filter(year=year)
-        if country != "EU":
-            top_recipients = top_recipients.filter(country=country)
-    else:
+    if year is None:
         top_recipients = models.Recipient.objects.top_recipients()
         if country != "EU":
             top_recipients = top_recipients.filter(countrypayment=country)
+    else:
+        top_recipients = models.RecipientYear.objects.filter(year=year)
+        if country != "EU":
+            top_recipients = top_recipients.filter(country=country)
+
     top_recipients = top_recipients[:5]
 
     # Cache top_recipients
@@ -86,7 +86,7 @@ def country(request, country, year=DEFAULT_YEAR):
                         key="country.%s.%s.top_recipients" % (country, year),
                         cache_type="filesystem")
 
-    if year == 0:
+    if year is None:
         top_schemes = models.Scheme.objects.top_schemes(country=country)[:5]
     else:
         top_schemes = models.SchemeYear.objects.top_schemes(year=year, country=country)[:5]

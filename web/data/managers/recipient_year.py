@@ -1,8 +1,5 @@
 # encoding: utf-8
 from django.db import models
-from django.conf import settings
-
-DEFAULT_YEAR = settings.DEFAULT_YEAR
 
 
 class RecipientYearManager(models.Manager):
@@ -14,7 +11,7 @@ class RecipientYearManager(models.Manager):
         return super(RecipientYearManager, self).get_query_set().filter(
                 total__isnull=False)
 
-    def recipents_for_location(self, location, year=DEFAULT_YEAR, country='EU'):
+    def recipents_for_location(self, location, year=None, country='EU'):
         """
         Given a location slug, retuen all recipients where the geo fields match.
 
@@ -36,7 +33,9 @@ class RecipientYearManager(models.Manager):
             kwargs['country'] = country
             kwargs['recipient__countrypayment'] = country
 
-        kwargs['year'] = year
+        if year is not None:
+            kwargs['year'] = year
+
         qs = self.get_query_set().filter(**kwargs)
         # qs = qs.only('name', 'total', 'country',)
         return qs
