@@ -9,12 +9,12 @@
 {% endblock %}
 
 {% block page_title %}
-  EU Farm subsidies for {{ country.name }}{% ifnotequal selected_year 0 %} in {{ selected_year }}{% else %}, All years{% endifnotequal %}
+  EU Farm subsidies for {{ country.name }}{% if selected_year %} in {{ selected_year }}{% else %}, All years{% endif %}
 {% endblock %}
 
 {% block content %}
 <p>
-    These pages list farm subsidy payments made in {{country.name}} as published directly by the government of {{country.name}} or sourced via freedom of information requests. {% if transparency %}{{country.name}} is <strong>{{transparency.rank}}</strong> in our <a href="/transparency/">transparency index</a> which measures how good governments are at opening up their data to the general public.{% endif %}
+    These pages list farm subsidy payments made in {{ country.name }} as published directly by the government of {{ country.name }} or sourced via freedom of information requests. {% if transparency %}{{ country.name }} is <strong>{{ transparency.rank }}</strong> in our <a href="/transparency/">transparency index</a> which measures how good governments are at opening up their data to the general public.{% endif %}
 </p>
 {% if stats_info or latest_news_item%}
     <p>
@@ -30,7 +30,7 @@
 {% if years %}
     <div class="year_selector section">
     Show subsidies for
-    {% if selected_year == 0 %}
+    {% if not selected_year %}
         <span class="selected">All Years</span>
     {% else %}
         <a href="{% url 'country' country=country.code %}" class="selected">All Years</a>
