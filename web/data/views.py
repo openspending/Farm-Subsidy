@@ -65,6 +65,8 @@ def country(request, country, year=None):
 
     """
     country = country.upper()
+    if year is not None:
+        year = int(year)
 
     years_max_min = models.CountryYear.objects.year_max_min(country)
     years = models.CountryYear.objects.filter(country=country)
@@ -135,7 +137,7 @@ def country(request, country, year=None):
             'stats_year': settings.STATS_YEAR,
             'stats_info': stats_info,
             'years': years,
-            'selected_year': int(year),
+            'selected_year': year,
             'years_max_min': years_max_min,
         },
         context_instance=RequestContext(request)
@@ -234,15 +236,15 @@ def all_schemes(request, country='EU'):
     )
 
 
-def scheme(request, country, globalschemeid, name, year=0):
+def scheme(request, country, globalschemeid, name, year=None):
     """
     Show a single scheme and a list of top recipients to get payments under it
 
     - `country` ISO country, as defined by countryCodes
     - ``globalschemeid` globalschemeid from the data_schemes table in the database
     """
-
-    selected_year = int(year)
+    if year is not None:
+        year = int(year)
 
     scheme = get_object_or_404(models.Scheme, globalschemeid=globalschemeid)
 
@@ -260,7 +262,7 @@ def scheme(request, country, globalschemeid, name, year=0):
         {
             'scheme': scheme,
             'scheme_years': scheme_years,
-            'selected_year': selected_year,
+            'selected_year': year,
             'top_recipients': top_recipients,
         },
         context_instance=RequestContext(request)
@@ -314,7 +316,7 @@ def all_locations(request, country, year=0):
 
 
 # @cache_page(60 * 60 * 4)
-def location(request, country, slug=None, year=0):
+def location(request, country, slug=None, year=None):
     """
     Single location object. This is a node in the tree, and could have
     children.
@@ -322,10 +324,12 @@ def location(request, country, slug=None, year=0):
     If children are found, we call them 'sub locations' and display a list of
     them.
     """
+    if year is not None:
+        year = int(year)
 
     location = get_object_or_404(models.Location, country=country, slug=slug, year=year)
 
-    if int(year) != 0:
+    if year is not None:
         location_recipients = models.RecipientYear.objects.recipents_for_location(location, year=year, country=country)
     else:
         location_recipients = models.Recipient.objects.recipents_for_location(location, country=country).order_by('-total')
