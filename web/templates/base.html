@@ -91,10 +91,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active">
-              <a href="/">Home</a>
-            </li>
-            <li>
+            <li{% block nav_countries %}{% endblock %}>
               <a href="{% url 'countries' %}">Countries</a>
             </li>
             {% comment %}
@@ -103,11 +100,11 @@
                 Transparency Index
               </a>
             </li>
-            {% endcomment %}
-            <li>
+            <li{% block nav_news %}{% endblock %}>
               <a href="/news/">News &amp; Reports</a>
             </li>
-            <li>
+            {% endcomment %}
+            <li{% if flatpage.url == '/faq/' %} class="active"{% endif %}>
               <a href="/faq/">FAQ</a>
             </li>
             <li>

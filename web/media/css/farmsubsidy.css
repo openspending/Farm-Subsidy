@@ -82,7 +82,7 @@ a, a:hover {
   color: #fff;
 }
 
-.nav>li>a:hover, .nav>li>a:focus {
+.nav>li>a:hover, .nav>li>a:focus, .nav>li.active>a {
   color: #fff;
   background-color: #333;
 }
