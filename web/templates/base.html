@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/farmsubsidy.css"/>
 
     <link href="{% url 'feature_feed' %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
-
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
 </head>
 
 <body>
@@ -247,7 +247,7 @@
   {% endif %}
 {% endblock analytics %}
 
-<script src="{{ STATIC_URL }}js/jquery.js"></script>
+
 {% block footer_scripts %}{% endblock %}
 
 </body>

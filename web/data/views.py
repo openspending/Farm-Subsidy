@@ -46,11 +46,29 @@ def home(request):
 
 def countries(request):
     countries = []
+    min_year = 99999
+    max_year = 0
     for country in countryCodes.country_codes():
-        countries.append(countryCodes.country_codes(country))
+        country_dict = countryCodes.country_codes(country)
+        years_max_min = models.CountryYear.objects.year_max_min(country)
+        country_dict['min_year'] = years_max_min[0]
+        country_dict['max_year'] = years_max_min[1]
+        if years_max_min[0] > 0 and years_max_min[0] < min_year:
+            min_year = years_max_min[0]
+        if years_max_min[1] > 0 and years_max_min[1] > max_year:
+            max_year = years_max_min[1]
+        countries.append(country_dict)
+    
+    years_available = []
+    for year in range(min_year, max_year + 1):
+        years_available.append(year)
 
     return render_to_response('countries.html',
-        {'countries': countries},
+        {
+         'countries': countries,
+         'years_available': years_available,
+         'latest_year': settings.LATEST_YEAR,
+         },
         context_instance=RequestContext(request))
 
 
