@@ -177,6 +177,11 @@
         {% if recipient.zipcode %}{{ recipient.zipcode|slice:"3:" }}<br />{% endif %}
     </p>
     <div class="sidebar-widget">
+      <h4>Research Tools</h4>
+      
+      Adress lookup on 
+      <a href="http://maps.google.com/?q=+{{ recipient.zipcode|urlencode }}+{{ recipient.town|urlencode }}" target="_blank">Google Maps</a> | 
+      <a href="http://www.openstreetmap.org/search?query={{ recipient.zipcode|urlencode }}+{{ recipient.town|urlencode }}" target="_blank">OpenStreetMap</a><br />
       Google search for <a href="https://www.google.com/?#q={{ recipient.name|urlencode }}" target="_blank">company</a> | 
       <a href="https://www.google.com/?#q={{ recipient.name|urlencode }}+farm+subsidies" target="_blank">subsidies</a><br />
     </div>
