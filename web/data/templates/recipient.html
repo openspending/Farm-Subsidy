@@ -176,6 +176,11 @@
         {% if recipient.address4 %}{{ recipient.address4|title }}<br />{% endif %}
         {% if recipient.zipcode %}{{ recipient.zipcode|slice:"3:" }}<br />{% endif %}
     </p>
+    <div class="sidebar-widget">
+      Google search for <a href="https://www.google.com/?#q={{ recipient.name|urlencode }}" target="_blank">company</a> | 
+      <a href="https://www.google.com/?#q={{ recipient.name|urlencode }}+farm+subsidies" target="_blank">subsidies</a><br />
+    </div>
+    
     {% comment %}
     <p>
         {% if recipient.geo4 %}<a href="{{ recipient.geo4_url }}">View other recipients in {{ recipient.geo4|title }}</a><br />{% endif %}
