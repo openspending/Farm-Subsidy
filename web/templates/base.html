@@ -54,7 +54,7 @@
 
         <div class="row">
 
-          <div class="pull-right col-lg-5 search-form">
+          <div class="pull-right col-lg-5 col-md-6 col-sm-8 search-form">
             <form action="{% url 'search' %}" method="get" accept-charset="utf-8">
 
               <div class="input-group">
@@ -118,7 +118,7 @@
     </div>
 
     <div class="row content-row">
-      <div class="content col-lg-8 col-md-8">
+      <div class="content col-lg-8 col-md-8 col-sm-7">
         <div class="heading">
           <p class="breadcrumbs">
             {% block breadcrumb %}{% endblock %}
@@ -134,7 +134,7 @@
 
       </div>
 
-      <div class="sidebar col-lg-4 col-md-4">
+      <div class="sidebar col-lg-4 col-md-4 col-sm-5">
         <div class="right">
           {% block right %}
             {% if featured_items %}
@@ -179,11 +179,11 @@
           <div class="sidebar-widget">
             <div class="text-center">
                 <a href="https://openspending.org">
-                    <img src="{{ STATIC_URL }}images/openspending.png" alt="OpenSpending"/>
+                    <img class="img-responsive" src="{{ STATIC_URL }}images/openspending.png" alt="OpenSpending"/>
                 </a>
                 <br/>
                 <a href="http://journalismfund.eu/">
-                    <img src="{{ STATIC_URL }}images/journalismfundeu.png" alt="JournalimFund.eu"/>
+                    <img class="img-responsive" src="{{ STATIC_URL }}images/journalismfundeu.png" alt="JournalimFund.eu"/>
                 </a>
             </div>
             <p>
@@ -198,7 +198,7 @@
     <div class="container">
       <div class="row">
         {% block footer %}
-          <div class="col-lg-3 col-lg-offset-1">
+          <div class="col-lg-3 col-lg-offset-1 col-md-4 col-sm-4">
             <h5>Looking for more information?</h5>
             <ul class="list-unstyled">
               <li><a href="/news">News &amp; reports</a></li>
@@ -206,7 +206,7 @@
               <li><a href="/about">About us</a></li>
             </ul>
           </div>
-          <div class="col-lg-3 col-lg-offset-1">
+          <div class="col-lg-3 col-lg-offset-1 col-md-4 col-sm-4">
             <h5>Get in touch:</h5>
             <ul class="list-unstyled">
               <li><a href="mailto:farmsubsidy[-at-]openspending[-dot-]org">Email</a></li>
@@ -215,7 +215,7 @@
               </li>
             </ul>
           </div>
-          <div class="col-lg-3 col-lg-offset-1">
+          <div class="col-lg-3 col-lg-offset-1 col-md-4 col-sm-4">
             <h5>Technical</h5>
             <ul class="list-unstyled">
               <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
@@ -244,6 +244,7 @@
   {% endif %}
 {% endblock analytics %}
 
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 
 {% block footer_scripts %}{% endblock %}
 

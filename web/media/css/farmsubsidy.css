@@ -17,7 +17,7 @@ a, a:hover {
 
 .top-area {
   background: url('../images/header.jpg') top center no-repeat;
-  height: 225px;
+  min-height: 225px;
   position: relative;
 }
 
@@ -55,19 +55,39 @@ a, a:hover {
 }
 
 .the-cow {
-  width: 220px;
-  height: 220px;
-  position: absolute;
-  bottom: -80px;
-  background-color: #139744;
-  border-radius: 150px;
+  display: none;
 }
 
-.the-cow img {
-  position: absolute;
-  top: 30px;
-  left: 20px;
-  z-index: 100;
+.navbar-fs .navbar-brand {
+  background: url('../images/logo-cow-small.png') left center no-repeat;
+  padding-left: 65px;
+}
+
+
+@media (min-width: 992px) {
+
+  .navbar-fs .navbar-brand {
+    padding-left: 15px;
+    background: none;
+  }
+
+  .the-cow {
+    display: block;
+    width: 220px;
+    height: 220px;
+    position: absolute;
+    bottom: -80px;
+    background-color: #139744;
+    border-radius: 150px;
+  }
+
+  .the-cow img {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    z-index: 100;
+  }
+
 }
 
 .navbar-fs {
@@ -90,6 +110,10 @@ a, a:hover {
 .navbar-fs .navbar-brand {
   color: #fff;
   font-size: 26px;
+}
+
+.navbar-toggle .icon-bar {
+  background-color: #fff;
 }
 
 .content-row {
