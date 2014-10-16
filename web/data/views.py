@@ -101,10 +101,10 @@ def country(request, country, year=None):
     top_recipients = top_recipients[:5]
 
     # Cache top_recipients
-    top_recipients = QuerySetCache(
-                        top_recipients,
-                        key="country.%s.%s.top_recipients" % (country, year),
-                        cache_type="filesystem")
+    #top_recipients = QuerySetCache(
+    #                    top_recipients,
+    #                    key="country.%s.%s.top_recipients" % (country, year),
+    #                    cache_type="filesystem")
 
     if year is None:
         top_schemes = models.Scheme.objects.top_schemes(country=country)[:5]
@@ -112,10 +112,10 @@ def country(request, country, year=None):
         top_schemes = models.SchemeYear.objects.top_schemes(year=year, country=country)[:5]
 
     # Cache top_schemes
-    top_schemes = QuerySetCache(
-                        top_schemes,
-                        key="country.%s.%s.top_schemes" % (country, year),
-                        cache_type="filesystem")
+    #top_schemes = QuerySetCache(
+    #                    top_schemes,
+    #                    key="country.%s.%s.top_schemes" % (country, year),
+    #                    cache_type="filesystem")
 
     top_locations = models.Location.get_root_nodes().filter(year=year)
     if country and country != "EU":
@@ -123,10 +123,10 @@ def country(request, country, year=None):
     top_locations = top_locations.order_by('-total')[:5]
 
     # Cache top_locations
-    top_locations = QuerySetCache(
-                        top_locations,
-                        key="country.%s.%s.top_locations" % (country, year),
-                        cache_type="filesystem")
+    #top_locations = QuerySetCache(
+    #                    top_locations,
+    #                    key="country.%s.%s.top_locations" % (country, year),
+    #                    cache_type="filesystem")
 
     #get transparency score
     transparency = None
