@@ -14,7 +14,7 @@ from django.conf import settings
 
 from feeds.models import FeedItems
 from tagging.models import TaggedItem, Tag
-from misc.helpers import country_template, CachedCountQuerySetWrapper, QuerySetCache
+from misc.helpers import country_template, CachedCountQuerySetWrapper#, QuerySetCache
 from web.countryinfo.transparency import transparency_score
 from data import countryCodes
 
@@ -31,7 +31,7 @@ def home(request):
     # top_for_ip = models.Recipient.objects.top_recipients(country=ip_country)
 
     top_eu = models.RecipientYear.objects.filter(year=LATEST_YEAR)[:10]
-    top_eu = QuerySetCache(top_eu, key="home.top_eu", cache_type="filesystem")
+    #top_eu = QuerySetCache(top_eu, key="home.top_eu", cache_type="filesystem")
 
     latest_annotations = Comment.objects.all().order_by('-submit_date')[:5]
 
@@ -240,10 +240,10 @@ def all_schemes(request, country='EU'):
     if country != 'EU':
         schemes = schemes.filter(countrypayment=country)
 
-    schemes = QuerySetCache(
-                        schemes,
-                        key="all_schemes.%s.schemes" % (country,),
-                        cache_type="filesystem")
+    #schemes = QuerySetCache(
+    #                    schemes,
+    #                    key="all_schemes.%s.schemes" % (country,),
+    #                    cache_type="filesystem")
 
     return render_to_response(
         country_template('all_schemes.html', country),
