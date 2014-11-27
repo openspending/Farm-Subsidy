@@ -36,6 +36,7 @@ class Command(BaseCommand):
                     ('data_recipient_total', 'total'),
             ]
         }
+        super(Command, self).__init__()
 
     def drop(self):
         for table in self.tables:
