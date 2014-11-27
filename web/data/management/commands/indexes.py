@@ -27,12 +27,12 @@ class Command(BaseCommand):
                     ('data_payment_globalpaymentid', 'globalpaymentid'),
                     ('data_payment_globalrecipientid', 'globalrecipientid'),
                     ('data_payment_globalschemeid', 'globalschemeid'),
-                    ('data_payment_pkey', 'pkey'),
                     ('data_payment_year', 'year'),
             ],
             'data_recipient': [
                     ('data_recipient_countrypayment', 'countrypayment'),
                     ('data_recipient_countryrecipient', 'countryrecipient'),
+                    ('data_recipient_globalrecipientid', 'globalrecipientid'),
                     ('data_recipient_total', 'total'),
             ]
         }
