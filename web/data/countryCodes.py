@@ -16,8 +16,8 @@ def country_codes(code=None, local='GB'):
     countries['DE'] = {'GB': 'Germany'}
     countries['GR'] = {'GB': 'Greece'}
     countries['HU'] = {'GB': 'Hungary'}
-    countries['IT'] = {'GB': 'Italy'}
     countries['IE'] = {'GB': 'Ireland'}
+    countries['IT'] = {'GB': 'Italy'}
     countries['LV'] = {'GB': 'Latvia'}
     countries['LT'] = {'GB': 'Lithuania'}
     countries['LU'] = {'GB': 'Luxembourg'}
@@ -27,10 +27,10 @@ def country_codes(code=None, local='GB'):
     countries['PT'] = {'GB': 'Portugal'}
     countries['RO'] = {'GB': 'Romania'}
     countries['SK'] = {'GB': 'Slovakia'}
+    countries['SI'] = {'GB': 'Slovenia'}
     countries['ES'] = {'GB': 'Spain'}
     countries['SE'] = {'GB': 'Sweden'}
     countries['GB'] = {'GB': 'United Kingdom'}
-    countries['SI'] = {'GB': 'Slovenia'}
 
     if code:
         if code in countries.keys():
