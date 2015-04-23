@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<div style="float:right;width:315px;margin-left:30px;margin-bottom:20px;">
+<div style="float:right;width:363px;margin-left:30px;margin-bottom:20px;">
   <div style="border: 1px solid #ddd;margin-bottom:12px;">
   <div style="padding:10px 12px 10px 12px;font-size:14px;margin-bottom:0px;">
     <h5 style="margin-top:0px;"><i class="fa fa-database"></i> Data Source:</h5>
@@ -30,7 +30,7 @@
     {% endif %}
   </div>
   <div style="background-color:#eee;padding:10px 12px 10px 12px;font-size:12px;">
-    <h5 style="margin-top:0px;">Instructions:</h5>
+    <h5 style="margin-top:0px;">Data Source Instructions:</h5>
     {% if country_info.original_source_instructions != "" %}
       {{ country_info.original_source_instructions|linebreaksbr }}
     {% else %}
@@ -61,6 +61,8 @@
         {% endif %}
     </p>
 {% endif %}
+
+<div style="clear:both;"></div>
 
 {% if years %}
     <div class="year_selector section">
