@@ -1,4 +1,5 @@
 from django.contrib import admin
-from models import TransparencyScore
+from models import CountryInfo, TransparencyScore
 
+admin.site.register(CountryInfo)
 admin.site.register(TransparencyScore)
