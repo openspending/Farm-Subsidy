@@ -13,11 +13,29 @@
 {% endblock %}
 
 {% block content %}
-<p>
+<div style="float:right;width:315px;margin-left:30px;margin-bottom:20px;">
+  <div style="border: 1px solid #ddd;margin-bottom:12px;">
+  <div style="padding:10px 12px 10px 12px;font-size:14px;margin-bottom:0px;">
+    <h5 style="margin-top:0px;"><i class="fa fa-database"></i> Data Source:</h5>
+    <a href="http://www.transparenzdatenbank.at/" target="_blank">Austria &quot;Transparenzdatenbank&quot;</a>
+  </div>
+  <div style="background-color:#eee;padding:10px 12px 10px 12px;font-size:12px;">
+    <h5 style="margin-top:0px;">Instructions:</h5>
+    Go to &quot;EU-Agrarzahlungen&quot and then click on the link &quot;Zur Suche&quot; at the very bottom of the page.<br><br>
+    Pressing the "Suche" button delivers first results without having to enter anything in the search form.
+  </div>
+  </div>
+
+  <a href="http://data.farmsubsidy.org/BE_Belgium_2002-2013_C_LR2014-09-27.tar.bz2" type="button" style="width:100%;text-align:center" class="btn btn-primary">
+    Download Country Data<br>
+    <span style="font-size:11px;">BE_Belgium_2002-2013_C_LR2014-09-27.tar.bz2</span>
+  </a>
+</div>
+<p style="min-width:230px;">
     These pages list farm subsidy payments made in {{ country.name }} as published directly by the government of {{ country.name }} or sourced via freedom of information requests. {% if transparency %}{{ country.name }} is <strong>{{ transparency.rank }}</strong> in our <a href="/transparency/">transparency index</a> which measures how good governments are at opening up their data to the general public.{% endif %}
 </p>
 {% if stats_info or latest_news_item%}
-    <p>
+    <p style="min-width:230px;">
         {% if stats_info %}
             In {{stats_year}} {{country.name}} received <strong>{{ stats_info.total_spending|safe }}</strong> in EU farm subsidies or approximately <strong>{{ stats_info.spending_per_farm|safe }} per farm</strong>.
         {% endif %}
