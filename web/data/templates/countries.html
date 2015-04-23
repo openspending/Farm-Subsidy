@@ -35,15 +35,22 @@
       <thead>
         <tr>
           <th>Country</th>
+          <th>Data Source</th>
           <th>Oldest</th>
           <th>Newest</th>
           <th style="text-align: right;">Latest year ({{ latest_year }})</th>
+
         </tr>
       </thead>
       <tbody>
       {% for country in countries %}
         <tr class="{% if country.max_year < latest_year %}not_with_latest{% endif %}">
           <td><a href="{% url 'country' country.code %}">{{ country.name }}</a></td>
+          <td>
+            {% if country.original_source_url != "" %}
+              <a href="{{ country.original_source_url }}" target="_blank">Link</a>
+            {% endif %}
+          </td>
           <td>{% if country.min_year > 0 %}{{ country.min_year }}{% else %}&nbsp;{% endif %}</td>
           <td>{% if country.max_year > 0 %}{{ country.max_year }}{% else %}&nbsp;{% endif %}</td>
           <td style="text-align: right;">

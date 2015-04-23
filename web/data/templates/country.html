@@ -17,18 +17,35 @@
   <div style="border: 1px solid #ddd;margin-bottom:12px;">
   <div style="padding:10px 12px 10px 12px;font-size:14px;margin-bottom:0px;">
     <h5 style="margin-top:0px;"><i class="fa fa-database"></i> Data Source:</h5>
-    <a href="http://www.transparenzdatenbank.at/" target="_blank">Austria &quot;Transparenzdatenbank&quot;</a>
+    {% if country_info.original_source_name != "" %}
+      {% if country_info.original_source_url != "" %}
+        <a href="{{ country_info.original_source_url }}" target="_blank">
+      {% endif %}
+      {{ country_info.original_source_name }}
+      {% if country_info.original_source_url != "" %}
+        </a>
+      {% endif %}
+    {% else %}
+      Not available
+    {% endif %}
   </div>
   <div style="background-color:#eee;padding:10px 12px 10px 12px;font-size:12px;">
     <h5 style="margin-top:0px;">Instructions:</h5>
-    Go to &quot;EU-Agrarzahlungen&quot and then click on the link &quot;Zur Suche&quot; at the very bottom of the page.<br><br>
-    Pressing the "Suche" button delivers first results without having to enter anything in the search form.
+    {% if country_info.original_source_instructions != "" %}
+      {{ country_info.original_source_instructions|linebreaksbr }}
+    {% else %}
+      Not available
+    {% endif %}
   </div>
   </div>
 
-  <a href="http://data.farmsubsidy.org/BE_Belgium_2002-2013_C_LR2014-09-27.tar.bz2" type="button" style="width:100%;text-align:center" class="btn btn-primary">
-    Download Country Data<br>
-    <span style="font-size:11px;">BE_Belgium_2002-2013_C_LR2014-09-27.tar.bz2</span>
+  <a href="http://data.farmsubsidy.org/{{ country_info.download_filename }}" type="button" style="width:100%;text-align:center" class="btn btn-primary {% if country_info.download_filename == "" %}disabled{% endif %}">
+    {% if country_info.download_filename == "" %}
+      No download available
+    {% else %}
+    Download Country Data {% if country_info.download_size != "" %}({{ country_info.download_size }}){% endif %}<br>
+    <span style="font-size:11px;">{{ country_info.download_filename }}</span>
+    {% endif %}
   </a>
 </div>
 <p style="min-width:230px;">

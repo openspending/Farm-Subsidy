@@ -1,5 +1,9 @@
 from django.contrib import admin
 from models import CountryInfo, TransparencyScore
 
-admin.site.register(CountryInfo)
+
+class CountryInfoAdmin(admin.ModelAdmin):
+    list_display = ('country', 'original_source_name', 'download_filename',)
+
+admin.site.register(CountryInfo, CountryInfoAdmin)
 admin.site.register(TransparencyScore)

@@ -14,6 +14,7 @@ from django.conf import settings
 
 from feeds.models import FeedItems
 from tagging.models import TaggedItem, Tag
+from countryinfo.models import CountryInfo
 from misc.helpers import country_template, CachedCountQuerySetWrapper#, QuerySetCache
 from web.countryinfo.transparency import transparency_score
 from data import countryCodes
@@ -50,6 +51,8 @@ def countries(request):
     max_year = 0
     for country in countryCodes.country_codes():
         country_dict = countryCodes.country_codes(country)
+        country_info, ci_created = CountryInfo.objects.get_or_create(country=country)
+        country_dict['original_source_url'] = country_info.original_source_url
         years_max_min = models.CountryYear.objects.year_max_min(country)
         country_dict['min_year'] = years_max_min[0]
         country_dict['max_year'] = years_max_min[1]
@@ -132,6 +135,7 @@ def country(request, country, year=None):
     transparency = None
     if country != "EU":
         transparency = transparency_score(country)
+    country_info, ci_created = CountryInfo.objects.get_or_create(country=country)
 
     #get the most recent news story
     latest_news_item = False
@@ -150,6 +154,7 @@ def country(request, country, year=None):
             'top_recipients': top_recipients,
             'top_schemes': top_schemes,
             'top_locations': top_locations,
+            'country_info': country_info,
             'transparency': transparency,
             'latest_news_item': latest_news_item,
             'stats_year': settings.STATS_YEAR,

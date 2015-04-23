@@ -16,4 +16,8 @@ class CountryInfo(models.Model):
     original_source_url = models.URLField(blank=True)
     original_source_instructions = models.TextField(blank=True)
     download_filename = models.CharField(max_length=85, blank=True)
+    download_size = models.CharField(max_length=10, blank=True)
+
+def __unicode__(self):
+        return self.country
 
