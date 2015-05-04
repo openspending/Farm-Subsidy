@@ -32,6 +32,9 @@ class Command(BaseCommand):
             sys.exit("A year list can only be provided when exporting data for a single country")
         if year_list:
             year_list = year_list.split(',')
+            yl_from_cl = True
+        else:
+            yl_from_cl = False
 
         if os.path.isfile(script_path):
             sys.stdout.write("Deleting existing script file: %s" % script_path)
@@ -41,7 +44,7 @@ class Command(BaseCommand):
 
         for country in country_list:
             sys.stdout.write("\nGenerating script commands for country %s...\n" % country)
-            if not year_list:
+            if not yl_from_cl:
                 year_list = list(CountryYear.objects.filter(country=country).values_list('year', flat=True))
                 sys.stdout.write("Reading year list from DB: %s\n" % str(year_list))
             else:

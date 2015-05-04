@@ -1,4 +1,6 @@
 web/settings.py
+web/export_to_flat.sh
+web/tmpweb/tmp/
 data/stats/payment_totals.txt
 data/csv
 *.pyc
