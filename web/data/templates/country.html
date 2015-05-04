@@ -38,15 +38,6 @@
     {% endif %}
   </div>
   </div>
-
-  <a href="http://data.farmsubsidy.org/{{ country_info.download_filename }}" type="button" style="width:100%;text-align:center" class="btn btn-primary {% if country_info.download_filename == "" %}disabled{% endif %}">
-    {% if country_info.download_filename == "" %}
-      No download available
-    {% else %}
-    Download Country Data {% if country_info.download_size != "" %}({{ country_info.download_size }}){% endif %}<br>
-    <span style="font-size:11px;">{{ country_info.download_filename }}</span>
-    {% endif %}
-  </a>
 </div>
 <p style="min-width:230px;">
     These pages list farm subsidy payments made in {{ country.name }} as published directly by the government of {{ country.name }} or sourced via freedom of information requests. {% if transparency %}{{ country.name }} is <strong>{{ transparency.rank }}</strong> in our <a href="/transparency/">transparency index</a> which measures how good governments are at opening up their data to the general public.{% endif %}
@@ -65,23 +56,35 @@
 <div style="clear:both;"></div>
 
 {% if years %}
-    <div class="year_selector section">
-    Show subsidies for
-    {% if not selected_year %}
-        <span class="selected">All Years</span>
-    {% else %}
-        <a href="{% url 'country' country=country.code %}" class="selected">All Years</a>
-    {% endif %}
+  <div class="year_selector section">
+    <div style="margin-bottom:10px;">
+      Show subsidies for:
+    </div>
+    
+    <div class="btn-group">
+        <a type="button" href="{% url 'country' country=country.code %}" class="btn btn-sm {% if not selected_year %}btn-primary{% else %}btn-default{% endif %}">All Years</a>
+    </div>
 
     {% for year in years %}
-        {% if year.year == selected_year  %}
-            <strong>{{ year.year }}</strong>
-        {% else %}
-            {% url 'country_year' country=country.code year=year.year as year_url %}
-            <a href="{{ year_url }}">{{ year.year }}</a>
-        {% endif %}
+        {% url 'country_year' country=country.code year=year.year as year_url %}
+        <div class="btn-group">
+          <a type="button" href="{{ year_url }}" class="btn btn-sm {% if year.year == selected_year %}btn-primary{% else %}btn-default{% endif %}">{{ year.year }}</a>
+        </div>
     {% endfor %}
+    
+    <div style="margin-top:15px;font-size:12px;">
+      CSV Download:&nbsp;&nbsp;&nbsp; 
+      {% for year in years %}
+        {% if not forloop.first %}
+          &nbsp;|&nbsp; 
+        {% endif %}
+        {% url 'country_year' country=country.code year=year.year as year_url %}
+        <a href="http://data.farmsubsidy.org/Flat/{{ country.code }}/{{ country.code }}_Subsidies_{{ year.year }}.csv" class="">{{ year.year }}</a> 
+      {% endfor %}
+      &nbsp; (<a href="http://data.farmsubsidy.org/index.html?prefix=Flat/{{ country.code }}/" class="">File Sizes</a>)
     </div>
+
+  </div>
 {% endif %}
 
 <div class="section">

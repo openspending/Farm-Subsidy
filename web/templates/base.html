@@ -20,7 +20,7 @@
 
     <meta name="google-site-verification" content="hyG2KNMuw7MW6cT7ImXaOIJ44j9YW6PJPh0M-_4lv8U" />
 
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}bootstrap-334/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/farmsubsidy.css"/>
 
     <link href="{% url 'feature_feed' %}" type="application/atom+xml" rel="alternate" title="Farmsubsidy News Feed" />
@@ -219,7 +219,9 @@
             <h5>Technical</h5>
             <ul class="list-unstyled">
               <li><a href="http://github.com/openspending/Farm-Subsidy">Get the code</a></li>
-              <li><a href="http://data.farmsubsidy.org/index.html">Get the raw data</a> | 
+              <li><a href="http://data.farmsubsidy.org/index.html?prefix=Flat/">Get flat format data (recommended)</a><li>
+                <li><a href="http://data.farmsubsidy.org/index.html">Get the raw data</a><li>
+              <li> 
                 <a href="https://docs.google.com/spreadsheet/ccc?key=0Ajagl3TOC7X_dFlzQ0ljaUxUWVNmNE40TGdweWNlcEE&hl=en#gid=7">Spreadsheet</a></li>
               {# <li><a href="/api/">API</a></li> #}
             </ul>
@@ -243,7 +245,7 @@
   {% endif %}
 {% endblock analytics %}
 
-<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-334/js/bootstrap.min.js"></script>
 
 {% block footer_scripts %}{% endblock %}
 
