@@ -5,6 +5,12 @@ from django.core.management.base import BaseCommand, CommandError
 from data.models import Payment, Recipient, Scheme
 
 
+'''
+Not used, also ignore corresponding documentation.
+Concept has to be reworked.
+
+Holger Drewes, @HolgerD77, 2015-05-04
+'''
 class Command(BaseCommand):
     
     help = 'Loads data for a year from the simplified payment.txt data format into DB (2013 or newer)'
